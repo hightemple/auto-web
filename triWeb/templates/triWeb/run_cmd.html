@@ -1,0 +1,27 @@
+{% load debugtools_tags %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Result</title>
+</head>
+<body>
+    <h3> Result is update:</h3>
+    ip:  {{ ip_list }}  groups: {{ grp_list }} <br/>
+    <h5><strong> <font color="red"> CMD  :  {{ cmd }} </font></strong></h5>
+{#    <script src="http://apps.bdimg.com/libs/jquery/1.11.1/jquery.min.js"></script>#}
+{#    <script type="text/javascript">#}
+{#        var auto_fresh = setInterval(#}
+{#                function() {#}
+{#                    $.get('/cmd_result/', {Action: 'get'}, function(data) {#}
+{#                        var content = document.getElementById('load');#}
+{#                        content.innerHTML = data;#}
+{#                    }).fadeIn("slow");#}
+{#                }, 2000#}
+{#        );#}
+{#    </script>#}
+
+    <pre id='load'>
+            {{ result }}
+    </pre>
+</body>
+</html>

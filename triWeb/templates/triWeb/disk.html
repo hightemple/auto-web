@@ -1,0 +1,22 @@
+{% load debugtools_tags %}
+<html>
+<body>
+
+{% for name, info in name_dict.items %}
+    <ul>
+        {{ name }}
+            {% print name %}
+            <ul>
+            {% for item in info %}
+
+                <li>{{ item }}</li>
+            {% endfor %}
+            </ul>
+    </ul>
+
+{% endfor %}
+
+<p type="color=red">Show disk usage:</p>
+<pre> {{ disk_usage }}</pre>
+</body>
+</html>
