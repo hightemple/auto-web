@@ -1,3 +1,5 @@
+from functools import reduce
+
 import paramiko
 
 import os
@@ -52,11 +54,17 @@ def run_cmd(request):
             grp_lst.append(grp)
             for ip in groups[grp]:
                 ip_lst.append(ip)
+    ip_str=reduce(lambda x,y:x+" "+y, ip_lst)
 
+    # for ip in ip_lst:
+    #     ssh_rst = ssh2(ip,'root','rootroot',cmd)
+    #     result = result + "\n" + ip + ": \n" + ssh_rst.decode('ascii')
 
-    for ip in ip_lst:
-        ssh_rst = ssh2(ip,'root','rootroot',cmd)
-        result = result + "\n" + ip + ": \n" + ssh_rst.decode('ascii')
+    cur_path= os.path.realpath(__file__)
+    f_path = os.path.join(os.path.dirname(cur_path), 'tools/pxssh.py')
+    p_cmd = 'python3 %s  "%s" %s %s %s "%s"' % (f_path, ip_str, 'root', 'rootroot', 22, cmd)
+    result=os.popen(p_cmd).read()
+
 
 
     return render(request, 'triWeb/run_cmd.html', {'ip_list':ip_lst, 'grp_list':grp_lst,
