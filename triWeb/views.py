@@ -1,7 +1,4 @@
 from functools import reduce
-
-import paramiko
-
 import os
 from django.shortcuts import render
 from django.http import HttpResponse
@@ -83,17 +80,4 @@ def ips(request):
     return HttpResponse(rtn)
 
 
-def ssh2(ip, username, passwd, cmd):
-    try:
-        ssh = paramiko.SSHClient()
-        ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
-        ssh.connect(ip, 22, username, passwd, timeout=5)
-        stdin, stdout, stderr = ssh.exec_command(cmd)
-        #           stdin.write("Y")   #简单交互，输入 ‘Y’
-        return stdout.read()
-        #        for x in  stdout.readlines():
-        #          print x.strip("n")
-        return '%stOKn'%(ip)
-        ssh.close()
-    except:
-        return '%stErrorn'%(ip)
+
