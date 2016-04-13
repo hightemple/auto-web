@@ -80,4 +80,8 @@ def ips(request):
     return HttpResponse(rtn)
 
 
+def checkconfig_off_service(request):
+    return HttpResponse('<li>good<li>')
+
+
 
