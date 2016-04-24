@@ -1,49 +1,151 @@
 {% load debugtools_tags %}
-    <title>
-        Remote hosts
-    </title>
+{% load staticfiles %}
 
-    <body>
 
-        <form id='run_cmd' action="/run_cmd/" target="_blank" method="post">
-        <h2>Groups:</h2>
-        {% for group,ips in groups.items %}
-            <label >
-                <input type="checkbox" name={{ group }}> <strong>{{ group }} </strong> [{{ ips|length }} nodes]</input>
-                <script src="http://apps.bdimg.com/libs/jquery/1.11.1/jquery.min.js"></script>
-                <script>
-                    $(document).ready(function () {
-                        $({{ group }}).click(function () {
-                            $.get('/ips/',{Action:'get',Name :'{{ group }}'},function(data,status) {
-                                var content=document.getElementById('ips');
-                                content.innerHTML='Server List :'+'<br/>'+data
+<!DOCTYPE html>
+<html lang="en">
 
-{#                                $('#ips').html(data)#}
+<title>
+    Remote hosts
+</title>
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="icon" href="../../favicon.ico">
+
+    <title>Navbar Template for Bootstrap</title>
+
+    <!-- Bootstrap core CSS -->
+{#    <link href="../../dist/css/bootstrap.min.css" rel="stylesheet">#}
+    <link href="{% static  'bootstrap/css/bootstrap.min.css' %}" rel="stylesheet">
+    <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
+{#    <link href="../../assets/css/ie10-viewport-bug-workaround.css" rel="stylesheet">#}
+
+    <link href="{% static  'bootstrap/css/ie10-viewport-bug-workaround.css' %}" rel="stylesheet">
+    <!-- Custom styles for this template -->
+{#    <link href="navbar.css" rel="stylesheet">#}
+    <link href="{% static  'bootstrap/css/navbar.css' %}" rel="stylesheet">
+
+
+    <!-- Just for debugging purposes. Don't actually copy these 2 lines! -->
+    <!--[if lt IE 9]><script src="../../assets/js/ie8-responsive-file-warning.js"></script><![endif]-->
+{#    <script src="../../assets/js/ie-emulation-modes-warning.js"></script>#}
+     <link href="{% static  'bootstrap/js/ie-emulation-modes-warning.js' %}" rel="stylesheet">
+
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+</head>
+
+<body>
+
+    <div class="container">
+
+      <!-- Static navbar -->
+      <nav class="navbar navbar-default">
+        <div class="container-fluid">
+          <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+              <span class="sr-only">Toggle navigation</span>
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="#">COS</a>
+          </div>
+          <div id="navbar" class="navbar-collapse collapse">
+            <ul class="nav navbar-nav">
+              <li class="active"><a href="#">Home</a></li>
+              <li><a href="#">About</a></li>
+              <li><a href="#">Contact</a></li>
+              <li class="dropdown">
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Operation <span class="caret"></span></a>
+                <ul class="dropdown-menu">
+                  <li><a href="#">Service</a></li>
+                  <li><a href="#">Analyze</a></li>
+                  <li><a href="#">Report</a></li>
+                  <li role="separator" class="divider"></li>
+                  <li class="dropdown-header">Nav header</li>
+                  <li><a href="#">Wiki link</a></li>
+                  <li><a href="#">CDETS link</a></li>
+                </ul>
+              </li>
+            </ul>
+            <ul class="nav navbar-nav navbar-right">
+              <li class="active"><a href="./">Default <span class="sr-only">(current)</span></a></li>
+              <li><a href="../navbar-static-top/">Static top</a></li>
+              <li><a href="../navbar-fixed-top/">Fixed top</a></li>
+            </ul>
+          </div><!--/.nav-collapse -->
+        </div><!--/.container-fluid -->
+      </nav>
+
+      <!-- Main component for a primary marketing message or call to action -->
+        <div class="jumbotron">
+            <h1>Cos cluster</h1>
+            <form id='run_cmd' action="/run_cmd/" target="_blank" method="post">
+                <h2>Groups:</h2>
+                {% for group,ips in groups.items %}
+                    <label>
+                        <input type="checkbox" name={{ group }}> <strong>{{ group }} </strong> [{{ ips|length }}
+                        nodes]</input>
+{#                                    <script src="http://apps.bdimg.com/libs/jquery/1.11.1/jquery.min.js"></script>#}
+                        <script src="{% static  'bootstrap/js/jquery.min.js'%}"></script>
+                        <script>
+                            $(document).ready(function () {
+                                $({{ group }}).click(function () {
+                                    $.get('/ips/', {Action: 'get', Name: '{{ group }}'}, function (data, status) {
+                                        var content = document.getElementById('ips');
+                                        content.innerHTML = 'Server List :' + '<br/>' + data;
+
+                                        {#                                $('#ips').html(data)#}
+                                    })
+                                })
                             })
-                        })
-                    })
-                </script>
+                        </script>
 
-                <a href="#" id={{ group }}> view </a>
-            </label>
+                        <a href="#" id={{ group }}> view </a>
+                    </label>
 
-        {% endfor %}
-        <h3>IPs:</h3>
-        <div id="ips">
+                {% endfor %}
+                <h3>IPs:</h3>
+                <div id="ips">
 
+                </div>
+
+                </br>
+
+
+                <input name="cmd" type="text">
+                <button type="submit" onclick="myFunction()">RUN</button>
+            </form>
         </div>
 
-        </br>
-
-            <input name="cmd" type="text">
-            <button type="submit">RUN</button>
-        </form>
-
-        <h3>Cos Operation</h3>
-        <li><a href="/checkconfig_off_service/" target="_blank" method="post">Checkconfig off services</a></li>
+    </div> <!-- /container -->
 
 
-    </body>
+
+
+<!-- Bootstrap core JavaScript
+================================================== -->
+<!-- Placed at the end of the document so the pages load faster -->
+{#<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>#}
+{#<script src="{% static  'bootstrap/js/jquery.min.js'%}"></script>#}
+<script>window.jQuery || document.write('<script src="../../assets/js/vendor/jquery.min.js"><\/script>')</script>
+<script src="{% static  'bootstrap/js/bootstrap.min.js'%}"></script>
+<!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
+{#<script src="../../assets/js/ie10-viewport-bug-workaround.js"></script>#}
+<script src="{% static  'bootstrap/js/ie10-viewport-bug-workaround.js'%}"></script>
+</body>
+
+{#    <input id="demo" type="text">#}
 
 
 
