@@ -6,6 +6,8 @@ import datetime
 
 
 # Create your views here.
+from triWeb.tools.pxssh import ssh2
+
 
 def sayHi(request):
     return HttpResponse("Hello World!")
@@ -34,7 +36,8 @@ def disk(request):
     return render(request, 'triWeb/disk.html', {'disk_usage': disk_usage, 'name_dict':name_dict})
 
 groups = dict()
-groups['crdc'] = ['10.74.124.92','10.74.124.94','10.74.124.96','10.74.124.98','10.74.124.100','10.74.124.102']
+# groups['crdc'] = ['10.74.124.92','10.74.124.94','10.74.124.96','10.74.124.98','10.74.124.100','10.74.124.102']
+groups['crdc'] = ['10.74.124.92']
 
 
 def remote_hosts(reqeust):
@@ -51,17 +54,11 @@ def run_cmd(request):
             grp_lst.append(grp)
             for ip in groups[grp]:
                 ip_lst.append(ip)
-    ip_str=reduce(lambda x,y:x+" "+y, ip_lst)
 
-    # for ip in ip_lst:
-    #     ssh_rst = ssh2(ip,'root','rootroot',cmd)
-    #     result = result + "\n" + ip + ": \n" + ssh_rst.decode('ascii')
 
-    cur_path= os.path.realpath(__file__)
-    f_path = os.path.join(os.path.dirname(cur_path), 'tools/pxssh.py')
-    p_cmd = 'python3 %s  "%s" %s %s %s "%s"' % (f_path, ip_str, 'root', 'rootroot', 22, cmd)
-    result=os.popen(p_cmd).read()
-
+    for ip in ip_lst:
+        ssh_rst = ssh2(ip,'root','rootroot',cmd)
+        result = result + "\n" + ip + ": \n" + ssh_rst.decode('ascii')
 
 
     return render(request, 'triWeb/run_cmd.html', {'ip_list':ip_lst, 'grp_list':grp_lst,
