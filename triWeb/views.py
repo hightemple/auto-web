@@ -3,6 +3,8 @@ import os
 from django.shortcuts import render
 from django.http import HttpResponse
 import datetime
+import threading
+import queue
 
 
 # Create your views here.
@@ -37,11 +39,11 @@ def disk(request):
 
 groups = dict()
 # groups['crdc'] = ['10.74.124.92','10.74.124.94','10.74.124.96','10.74.124.98','10.74.124.100','10.74.124.102']
-groups['crdc'] = ['10.74.124.92']
+groups['crdc'] = ['10.74.124.92','10.74.124.94','10.74.124.96']
 
 
-def remote_hosts(reqeust):
-    return render(reqeust, 'triWeb/remote_hosts.html', {'groups': groups})
+def main_page(reqeust):
+    return render(reqeust, 'triWeb/main_page.html', {'groups': groups})
 
 
 def run_cmd(request):
@@ -56,13 +58,34 @@ def run_cmd(request):
                 ip_lst.append(ip)
 
 
+    # for ip in ip_lst:
+    #     ssh_rst = ssh2(ip,'root','rootroot',cmd)
+    #     result = result + "\n" + ip + ": \n" + ssh_rst.decode('ascii')
+
+    thread_list = list()
+    q = queue.Queue()
+    result = '-------Test Report:-------\n'
+
+    def sig_ssh(ip, username, password, cmd):
+        rtn = ssh2(ip, username, password, cmd)
+        q.put("cos node : %s"%ip)
+        q.put(rtn)
+
     for ip in ip_lst:
-        ssh_rst = ssh2(ip,'root','rootroot',cmd)
-        result = result + "\n" + ip + ": \n" + ssh_rst.decode('ascii')
+        thread_list.append(
+            threading.Thread(target=sig_ssh, name="t_ssh_to_%s" % ip, args=(ip, 'root', 'rootroot', cmd)))
 
+    for thread in thread_list:
+        thread.start()
 
-    return render(request, 'triWeb/run_cmd.html', {'ip_list':ip_lst, 'grp_list':grp_lst,
-                                                   'cmd': cmd, 'result':result})
+    for thread in thread_list:
+        thread.join()
+
+    while not q.empty():
+        result += q.get()
+
+    return render(request, 'triWeb/run_cmd.html', {'ip_list': ip_lst, 'grp_list': grp_lst,
+                                                   'cmd': cmd, 'result': result})
 
 
 def cmd_result(request):

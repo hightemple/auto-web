@@ -15,14 +15,15 @@ def ssh2(ip, username, passwd, cmd):
         ssh.connect(ip, 22, username, passwd, timeout=5)
         stdin, stdout, stderr = ssh.exec_command(cmd)
         #           stdin.write("Y")   #简单交互，输入 ‘Y’
-        return stdout.read()
+        rtn = stdout.read().decode('ascii')
         #        for x in  stdout.readlines():
         #          print x.strip("n")
-        return '%stOKn'%(ip)
+        # return '%stOKn'%(ip)
         ssh.close()
     except:
-        return '%stErrorn'%(ip)
+        rtn = '%s Error\n'%(ip)
 
+    return rtn
 
 # if __name__=="__main__":
 #     # ip_lst = ['10.74.124.92','10.74.124.94','10.74.124.96','10.74.124.98','10.74.124.100','10.74.124.102']

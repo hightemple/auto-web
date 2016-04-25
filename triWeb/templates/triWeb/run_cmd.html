@@ -1,28 +1,77 @@
+{% load staticfiles %}
 {% load debugtools_tags %}
+
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+`
     <title>Result</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="{% static  'bootstrap/css/bootstrap.min.css' %}" rel="stylesheet">
+
 </head>
 <body>
-    <h3> Result is update:</h3>
-    ip:  {{ ip_list }}  groups: {{ grp_list }} <br/>
-    <h5><strong> <font color="red"> CMD  :  {{ cmd }} </font></strong></h5>
-{#    <script src="http://apps.bdimg.com/libs/jquery/1.11.1/jquery.min.js"></script>#}
-{#    <script type="text/javascript">#}
-{#        var auto_fresh = setInterval(#}
-{#                function() {#}
-{#                    $.get('/cmd_result/', {Action: 'get'}, function(data) {#}
-{#                        var content = document.getElementById('load');#}
-{#                        content.innerHTML = data;#}
-{#                    }).fadeIn("slow");#}
-{#                }, 2000#}
-{#        );#}
-{#    </script>#}
+    <div class="container">
+        <div class="page-header">
+            <h1>Result Updated:</h1>
+        </div>
 
-    <pre id='load'>
+        <h3> <span class="label label-default">Group </span></h3>
+
+        <h4>
+            {% for ip in  ip_list %}
+                <span class="label label-primary">{{ ip }}</span>
+            {% endfor %}
+        </h4>
+
+
+        <div class="page-header">
+            <h2>Commands</h2>
+        </div>
+
+        <div class="alert alert-info" role="alert">
+            <strong>{{ cmd }}</strong>
+        </div>
+
+
+
+    {#    <script src="http://apps.bdimg.com/libs/jquery/1.11.1/jquery.min.js"></script>#}
+    {#    <script type="text/javascript">#}
+    {#        var auto_fresh = setInterval(#}
+    {#                function() {#}
+    {#                    $.get('/cmd_result/', {Action: 'get'}, function(data) {#}
+    {#                        var content = document.getElementById('load');#}
+    {#                        content.innerHTML = data;#}
+    {#                    }).fadeIn("slow");#}
+    {#                }, 2000#}
+    {#        );#}
+    {#    </script>#}
+
+        <pre id='load'>
 
             {{ result }}
-    </pre>
+        </pre>
+
+    </div>
+
+
+    <footer class="footer">
+      <div class="container">
+        <p class="text-muted">© 2015 cisco, Inc.</p>
+      </div>
+    </footer>
+<!-- Bootstrap core JavaScript
+================================================== -->
+<!-- Placed at the end of the document so the pages load faster -->
+<script src="{% static  'bootstrap/js/jquery.min.js'%}"></script>
+<script>window.jQuery || document.write('<script src="../../assets/js/vendor/jquery.min.js"><\/script>')</script>
+<script src="{% static  'bootstrap/js/bootstrap.min.js'%}"></script>
+<!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
+{#<script src="../../assets/js/ie10-viewport-bug-workaround.js"></script>#}
+<script src="{% static  'bootstrap/js/ie10-viewport-bug-workaround.js'%}"></script>
 </body>
+
+{#    <input id="demo" type="text">#}
 </html>
