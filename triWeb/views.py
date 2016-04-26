@@ -63,13 +63,12 @@ def run_cmd(request):
     #     result = result + "\n" + ip + ": \n" + ssh_rst.decode('ascii')
 
     thread_list = list()
-    q = queue.Queue()
-    result = '-------Test Report:-------\n'
+    # q = queue.Queue()
+    rst_dict = dict()
 
     def sig_ssh(ip, username, password, cmd):
         rtn = ssh2(ip, username, password, cmd)
-        q.put("cos node : %s"%ip)
-        q.put(rtn)
+        rst_dict[ip] = rtn
 
     for ip in ip_lst:
         thread_list.append(
@@ -81,11 +80,11 @@ def run_cmd(request):
     for thread in thread_list:
         thread.join()
 
-    while not q.empty():
-        result += q.get()
+    # while not q.empty():
+    #     rst_dict.append(q.get())
 
     return render(request, 'triWeb/run_cmd.html', {'ip_list': ip_lst, 'grp_list': grp_lst,
-                                                   'cmd': cmd, 'result': result})
+                                                   'cmd': cmd, 'rst_dict': rst_dict})
 
 
 def cmd_result(request):

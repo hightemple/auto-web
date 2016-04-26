@@ -31,9 +31,23 @@
             <h2>Commands</h2>
         </div>
 
-        <div class="alert alert-info" role="alert">
+        <div class="alert alert-success" role="alert">
             <strong>{{ cmd }}</strong>
         </div>
+
+        <div class="page-header">
+            <h2>Result</h2>
+        </div>
+
+        {% for node,rst in rst_dict.items %}
+            <div class="alert alert-warning" role="alert">
+                <strong> Nodes: {{ node }}</strong>
+            </div>
+            <div class="alert alert-info" role="alert">
+                <pre>{{ rst }}</pre>
+            </div>
+        {% endfor %}
+
 
 
 
@@ -49,10 +63,10 @@
     {#        );#}
     {#    </script>#}
 
-        <pre id='load'>
-
-            {{ result }}
-        </pre>
+{#        <pre id='load'>#}
+{##}
+{#            {{ result }}#}
+{#        </pre>#}
 
     </div>
 
