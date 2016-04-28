@@ -5,57 +5,60 @@
 
 
 {% block title %}
-<title>
-    COS
-</title>
+    <title>
+        COS
+    </title>
 {% endblock %}
 
 {% block content %}
-        <div class="jumbotron">
-            <h1>Cos cluster</h1>
-            <form id='run_cmd' action="/run_cmd/" target="_blank" method="post">
-                <h2>Groups:</h2>
-                {% for group,ips in groups.items %}
-                    <label>
-                        <input type="checkbox" name={{ group }}> <strong>{{ group }} </strong> [{{ ips|length }}
-                        nodes]</input>
+    <div class="jumbotron">
+        <h1>Cos cluster</h1>
+        <form id='run_cmd' action="/run_cmd/" target="_blank" method="post">
+            <h2>Groups:</h2>
+            {% for group,ips in groups.items %}
+                <label>
+                    <input type="checkbox" name={{ group }}> <strong>{{ group }} </strong> [{{ ips|length }}
+                    nodes]</input>
 
-                        <script src="{% static  'bootstrap/js/jquery.min.js'%}"></script>
-                        <script>
-                            $(document).ready(function () {
-                                $({{ group }}).click(function () {
-                                    $.get('/ips/', {Action: 'get', Name: '{{ group }}'}, function (data, status) {
-                                        var content = document.getElementById('ips');
-                                        content.innerHTML = 'Server List :' + '<br/>' + data;
+                    <script src="{% static  'bootstrap/js/jquery.min.js' %}"></script>
+                    <script>
+                        $(document).ready(function () {
+                            $({{ group }}).click(function () {
+                                $.get('/ips/', {Action: 'get', Name: '{{ group }}'}, function (data, status) {
+                                    var content = document.getElementById('ips');
+                                    content.innerHTML = 'Server List :' + '<br/>' + data;
 
-                                        {#                                $('#ips').html(data)#}
-                                    })
+                                    {#                                $('#ips').html(data)#}
                                 })
                             })
-                        </script>
+                        })
+                    </script>
 
-                        <a href="#" id={{ group }}> view </a>
-                    </label>
+                    <a href="#" id={{ group }}> view </a>
+                </label>
 
-                {% endfor %}
-                <h3>IPs:</h3>
-                <div id="ips">
+            {% endfor %}
+            <h3>IPs:</h3>
+            <div id="ips">
 
-                </div>
+            </div>
 
-                </br>
+            </br>
 
 
-                <input name="cmd" type="text">
-                <button type="submit" onclick="myFunction()">RUN</button>
-            </form>
+            <input name="cmd" type="text">
+            <button type="submit" onclick="myFunction()">RUN</button>
+        </form>
 
-            <h3>Services</h3>
-            <form class="form-horizontal" role="form">
-                <div class="form-group">
-                    <label class="btn btn-default col-sm-2">Group</label>
-                    <div class="col-sm-10">
-                        <select class="form-control" id="sel_grp">
+        <div class="container">
+            <div class="page-header">
+                <h2>Services</h2>
+            </div>
+            <form class="form-horizontal" action="/cos_config/" role="form" method="post" target="_blank">
+                <div class="row">
+                    <label class="btn btn-default col-xs-1">Group</label>
+                    <div class="col-xs-2">
+                        <select class="form-control" name="sel_grp" id="sel_grp">
 
                             {% for group,ips in groups.items %}
 
@@ -65,14 +68,31 @@
                         </select>
                     </div>
                 </div>
-            <script src="{% static  'bootstrap/js/jquery.min.js'%}"></script>
-                <a href='{% url "cos_config" grp="crdc" oper="show_all_service" %}'
-                   target="_blank" type="submit">Show all services</a>
+            <br>
+                <div class="row">
+                    <label class="btn btn-info col-xs-1">Action</label>
+                    <div class="col-xs-4">
+                        <select class="form-control" name="sel_cmd" id="sel_cmd">
+
+                            {% for cmd in cmds.keys %}
+
+                                <option>{{ cmd }}</option>
+                            {% endfor %}
+
+                        </select>
+                    </div>
+                </div>
+
+            <br>
+            <div class="row">
+                <button class="btn btn-warning" type="submit" >DONE</button>
+            </div>
+
             </form>
 
-
-
         </div>
+
+    </div>
 
 
 {% endblock content %}
