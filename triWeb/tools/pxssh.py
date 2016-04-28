@@ -13,6 +13,10 @@ def ssh2(ip, username, passwd, cmd):
         ssh = paramiko.SSHClient()
         ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
         ssh.connect(ip, 22, username, passwd, timeout=5)
+        # pkey_file = "/Users/chenxuan/.ssh/id_rsa"
+        # key = paramiko.RSAKey.from_private_key_file(pkey_file)
+        # ssh.connect(ip, 22, username, pkey=key, timeout=5)
+
         stdin, stdout, stderr = ssh.exec_command(cmd)
         #           stdin.write("Y")   #简单交互，输入 ‘Y’
         rtn = stdout.read().decode('ascii')

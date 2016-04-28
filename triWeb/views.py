@@ -49,6 +49,13 @@ cmd_dict = {
 def main_page(reqeust):
     return render(reqeust, 'triWeb/main_page.html', {'groups': groups, 'cmds': cmd_dict})
 
+def cos_service(request):
+    return render(request, 'triWeb/cos_service.html', {'groups': groups, 'cmds': cmd_dict})
+
+def cos_analyze(request):
+    now = datetime.datetime.now()
+    html = "<html><body> It is now : %s </body></html>" % now
+    return HttpResponse(html)
 
 def run_cmd(request):
     cmd = request.POST['cmd']

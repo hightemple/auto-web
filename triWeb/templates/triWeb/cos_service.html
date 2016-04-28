@@ -1,0 +1,65 @@
+{% extends 'triWeb/base.html' %}
+{% load debugtools_tags %}
+{% load staticfiles %}
+
+
+
+{% block title %}
+    <title>
+        COS
+    </title>
+{% endblock %}
+
+{% block content %}
+    <div class="jumbotron">
+        <h1>Cos cluster</h1>
+
+
+        <div class="container">
+            <div class="page-header">
+                <h2>Services</h2>
+            </div>
+            <form class="form-horizontal" action="/cos_config/" role="form" method="post" target="_blank">
+                <div class="row">
+                    <label class="btn btn-default col-xs-1">Group</label>
+                    <div class="col-xs-2">
+                        <select class="form-control" name="sel_grp" id="sel_grp">
+
+                            {% for group,ips in groups.items %}
+
+                                <option>{{ group }}</option>
+                            {% endfor %}
+
+                        </select>
+                    </div>
+                </div>
+            <br>
+                <div class="row">
+                    <label class="btn btn-info col-xs-1">Action</label>
+                    <div class="col-xs-4">
+                        <select class="form-control" name="sel_cmd" id="sel_cmd">
+
+                            {% for cmd in cmds.keys %}
+
+                                <option>{{ cmd }}</option>
+                            {% endfor %}
+
+                        </select>
+                    </div>
+                </div>
+
+            <br>
+            <div class="row">
+                <button class="btn btn-warning" type="submit" >DONE</button>
+            </div>
+
+            </form>
+
+        </div>
+
+    </div>
+
+
+{% endblock content %}
+
+
