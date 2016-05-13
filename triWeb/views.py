@@ -4,7 +4,10 @@ from django.shortcuts import render, get_object_or_404
 from django.http import HttpResponse
 import datetime
 import threading
+import json
+import yaml
 import queue
+from .tools.testbed import TestBed
 
 # Create your views here.
 from triWeb.tools.pxssh import ssh2
@@ -112,3 +115,17 @@ def ips(request):
     for ip in groups[group]:
         rtn = rtn + '<li>' + ip + '</li>'
     return HttpResponse(rtn)
+
+
+def testbeds(request):
+    # jconf = [{"text": "Root node", "children": ["Child node 1", "Child node 2"]}]
+    # fp = "/Users/chenxuan/Workspace/mpd/python3_/cos/cos_xuan.yaml"
+    # with open(fp) as f:
+    #     jconf = list(yaml.load(f))
+    fp = "/Users/chenxuan/Workspace/django/auto/triWeb/tools/testbed.yaml"
+    tb = TestBed()
+    conf_dict = tb.load(fp)
+
+    rtn_lst = tb.parse_to_json_tree(conf_dict)
+
+    return render(request, 'triWeb/testbeds.html', {'jconf': json.dumps(rtn_lst)})

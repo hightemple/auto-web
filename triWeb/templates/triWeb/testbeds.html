@@ -1,0 +1,108 @@
+{% extends 'triWeb/base.html' %}
+{% load staticfiles %}
+{% load debugtools_tags %}
+
+
+{% block title %}
+    <title>
+        Testbeds
+    </title>
+{% endblock %}
+
+
+{% block content %}
+    {#    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>#}
+    {##}
+    {#    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/jstree/3.0.9/themes/default/style.min.css"/>#}
+    {#    <script src="//cdnjs.cloudflare.com/ajax/libs/jstree/3.0.9/jstree.min.js"></script>#}
+
+    <link rel="stylesheet" href="{% static 'jstree/themes/default/style.min.css' %}">
+    <script src="{% static 'jstree/jstree.min.js' %}"></script>
+    {#    <script src="app.js"></script>#}
+
+
+
+    <h3>TestBed info</h3>
+    <div class="row">
+
+        <div class="col-md-2 col-sm-4 col-xs-4" style="text-align:right;">
+            <input type="text" value=""
+                   style="box-shadow:inset 0 0 4px #eee; width:120px; margin:0; padding:6px 12px; border-radius:4px; border:1px solid silver; font-size:1.1em;"
+                   id="demo_q" placeholder="Search"/>
+        </div>
+    </div>
+
+
+    <div class="container" id="container">
+        {#        <ul>#}
+        {#            <li>One</li>#}
+        {#            <li>Two</li>#}
+        {#                <ul>#}
+        {#                    <li>child 1</li>#}
+        {#                </ul>#}
+        {#        </ul>#}
+    </div>
+
+
+    <script type="text/javascript">
+        var List = {{ jconf|safe }}
+                $(function () {
+                    var to = false;
+                    $('#demo_q').keyup(function () {
+                        if (to) {
+                            clearTimeout(to);
+                        }
+                        to = setTimeout(function () {
+                            var v = $('#demo_q').val();
+                            $('#container').jstree(true).search(v);
+                        }, 250);
+                    });
+
+
+                    $('#container').jstree({
+                        'core': {
+                            "animation": 0,
+                            "check_callback": true,
+                            "themes": {"stripes": true},
+                            'data': {{ jconf|safe }}
+                        },
+                        "plugins": [
+                            "contextmenu",
+                            "dnd",
+                            "massload",
+                            "search",
+                            "sort",
+                            "state",
+                            "types",
+                            "unique",
+                            "wholerow",
+                            "changed",
+                            "conditionalselect"],
+                        "#": {
+                            "max_children": 1,
+                            "max_depth": 4,
+                            "valid_children": ["root"]
+                        },
+                        "root": {
+                            "icon": "/static/3.3.1/assets/images/tree_icon.png",
+                            "valid_children": ["default"]
+                        },
+                        "default": {
+                            "valid_children": ["default", "file"]
+                        },
+                        "file": {
+                            "icon": "glyphicon glyphicon-file",
+                            "valid_children": []
+                        }
+                    });
+                });
+
+        {#    $(document).ready(function () {#}
+        {#        $('#container').jstree({#}
+        {##}
+        {#            "plugins": ['checkbox']#}
+        {#        })#}
+        {#    })#}
+    </script>
+{% endblock content %}
+

@@ -1,0 +1,139 @@
+testbed:
+    name: charter_tb
+
+cos1:
+    name: cde465-a5
+    mgmtip: 172.22.117.15
+    user: root
+    password: rootroot
+    cf1: 20.0.51.161
+    cf2: 20.0.51.162
+    cf3: 20.0.51.163
+    cf4: 20.0.51.164
+    domain: ab.colusa.com
+    disks: ['csd1','csd2','csd3','csd4','csd5','csd6']
+    disks_cnt: 36
+
+cos2:
+    name: cde465-b1
+    mgmtip: 172.22.117.17
+    user: root
+    password: rootroot
+    cf1: 20.0.51.141
+    cf2: 20.0.51.142
+    cf3: 20.0.51.143
+    cf4: 20.0.51.144
+    disks_cnt: 36
+
+cos3:
+    name: cde465-b2
+    mgmtip: 172.22.117.18
+    user: root
+    password: rootroot
+    cf1: 20.0.51.145
+    cf2: 20.0.51.146
+    cf3: 20.0.51.147
+    cf4: 20.0.51.148
+    disks_cnt: 36
+
+cos4:
+    name: cde465-b3
+    mgmtip: 172.22.117.19
+    user: root
+    password: rootroot
+    cf1: 20.0.51.149
+    cf2: 20.0.51.150
+    cf3: 20.0.51.151
+    cf4: 20.0.51.152
+    disks_cnt: 36
+
+cos5:
+    name: cde465-b4
+    mgmtip: 172.22.117.20
+    user: root
+    password: rootroot
+    cf1: 20.0.51.153
+    cf2: 20.0.51.154
+    cf3: 20.0.51.155
+    cf4: 20.0.51.156
+    disks_cnt: 36
+
+cos6:
+    name: cde465-b5
+    mgmtip: 172.22.117.21
+    user: root
+    password: rootroot
+    cf1: 20.0.51.157
+    cf2: 20.0.51.158
+    cf3: 20.0.51.159
+    cf4: 20.0.51.160
+    disks_cnt: 36
+
+cosbench1:
+    name: cosben-a6
+    mgmtip: 172.22.117.36
+    interip: 20.0.50.36
+    user: root
+    password: cisco123
+    jmeter: /home/cosbench/jmeter/bin/jmeter
+
+cosbench2:
+    name: cosben-b1
+    mgmtip: 172.22.117.37
+    interip: 20.0.50.37
+    user: root
+    password: cisco123
+    jmeter: /home/cosbench/jmeter/bin/jmeter
+
+cosbench3:
+    name: cosben-b2
+    mgmtip: 172.22.117.38
+    interip: 20.0.50.38
+    user: root
+    password: cisco123
+    jmeter: /home/cosbench/jmeter/bin/jmeter
+
+cosbench4:
+    name: cosben-b3
+    mgmtip: 172.22.117.39
+    interip: 20.0.50.39
+    user: root
+    password: cisco123
+    jmeter: /home/cosbench/jmeter/bin/jmeter
+
+cosbench5:
+    name: cosben-b4
+    mgmtip: 172.22.117.40
+    interip: 20.0.50.40
+    user: root
+    password: cisco123
+    jmeter: /home/cosbench/jmeter/bin/jmeter
+
+cosbench6:
+    name: cosben-b5
+    mgmtip: 172.22.117.41
+    interip: 20.0.50.41
+    user: root
+    password: cisco123
+    jmeter: /home/cosbench/jmeter/bin/jmeter
+
+cosbench7:
+    name: cosben-b6
+    mgmtip: 172.22.117.42
+    interip: 20.0.50.42
+    user: root
+    password: cisco123
+    jmeter: /home/cosbench/jmeter/bin/jmeter
+
+pam1:
+    name: charter-ha-pam2
+    mgmtip: 172.22.117.67
+    user: admin
+    password: default
+
+build_server:
+    name: mpd-lnx1
+    mgmtip: 172.22.68.184
+    user: root
+    password: rootroot
+    image: /auto/cds-build/release_builds/3.5.2/cos_3.5.2-b4/target/cos_repo-3.5.2-0b4-x86_64.iso
