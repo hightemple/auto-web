@@ -14,35 +14,51 @@
     <div class="jumbotron">
         <h1>Cos cluster</h1>
         <form id='run_cmd' action="/run_cmd/" target="_blank" method="post">
-            <h2>Groups:</h2>
-            {% for group,ips in groups.items %}
+            <h2>Testbeds:</h2>
+            {% for tb,devices in tb2devices.items %}
                 <label>
-                    <input type="checkbox" name={{ group }}> <strong>{{ group }} </strong> [{{ ips|length }}
+                    <input type="checkbox" name={{ tb.name }}> <strong>{{ tb.name }} </strong> [{{ devices|length }}
                     nodes]</input>
 
                     <script src="{% static  'bootstrap/js/jquery.min.js' %}"></script>
                     <script>
                         $(document).ready(function () {
-                            $({{ group }}).click(function () {
-                                $.get('/ips/', {Action: 'get', Name: '{{ group }}'}, function (data, status) {
+                            $({{ tb.name }}).click(function () {
+                                $.get('/ips/', {Action: 'get', Name: '{{ tb.name }}'}, function (data, status) {
                                     var content = document.getElementById('ips');
                                     content.innerHTML = 'Server List :' + '<br/>' + data;
 
-                                    {#                                $('#ips').html(data)#}
                                 })
                             })
                         })
                     </script>
 
-                    <a href="#" id={{ group }}> view </a>
+                    <a href="#" id={{ tb.name }}> view </a>
+
                 </label>
 
             {% endfor %}
+
+{#            {% print tb2devices %}#}
+{#            {% for tb,devices in tb2devices.items %}#}
+{#                <ul>{{ tb.name }}</ul>#}
+{#                {% for dv in devices %}#}
+{##}
+{#                    <li>{{ dv.name }}  {{ dv.ip }}</li>#}
+{#                {% endfor %}#}
+{#            {% endfor %}#}
+
+{#            {% for tb in testbeds %}#}
+{#                <a href="#" id={{ tb.name }}> {{ tb.name }} </a>#}
+{#            {% endfor %}#}
+{##}
+{#            {% for cos in devices %}#}
+{#                {{ cos.ip }}#}
+{#            {% endfor %}#}
             <h3>IPs:</h3>
             <div id="ips">
 
             </div>
-
             </br>
 
 

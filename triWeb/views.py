@@ -11,6 +11,7 @@ from .tools.testbed import TestBed
 
 # Create your views here.
 from triWeb.tools.pxssh import ssh2
+from triWeb.models import TestBedModel,DeviceModel
 
 
 def sayHi(request):
@@ -50,7 +51,13 @@ cmd_dict = {
 
 
 def main_page(reqeust):
-    return render(reqeust, 'triWeb/main_page.html', {'groups': groups, 'cmds': cmd_dict})
+    tbs=TestBedModel.objects.all()
+
+    tb2devices =dict()
+    for tb in tbs:
+        tb2devices[tb]=DeviceModel.objects.filter(type='cos',testbed=tb)
+
+    return render(reqeust, 'triWeb/main_page.html', {'tb2devices':tb2devices,'groups': groups, 'cmds': cmd_dict})
 
 def cos_service(request):
     return render(request, 'triWeb/cos_service.html', {'groups': groups, 'cmds': cmd_dict})
@@ -110,10 +117,10 @@ def pssh_cmd(request, ips, cmd):
 
 
 def ips(request):
-    group = request.GET['Name']
+    tb_name = request.GET['Name']
     rtn = ''
-    for ip in groups[group]:
-        rtn = rtn + '<li>' + ip + '</li>'
+    for device in DeviceModel.objects.filter(testbed__name=tb_name,type='cos'):
+        rtn = rtn + '<li>' + device.name + "  " + device.ip + '</li>'
     return HttpResponse(rtn)
 
 
