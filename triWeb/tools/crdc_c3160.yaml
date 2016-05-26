@@ -1,0 +1,42 @@
+testbed:
+    name: crdc_c3160_tb
+
+cos1:
+    name: c3160-c1
+    mgmtip: 172.22.117.15
+    user: root
+    password: rootroot
+
+cos2:
+    name: c3160-b1
+    mgmtip: 172.22.117.17
+    user: root
+    password: rootroot
+
+cos3:
+    name: c3160-b2
+    mgmtip: 172.22.117.18
+    user: root
+    password: rootroot
+
+
+cos4:
+    name: c3160-b3
+    mgmtip: 172.22.117.19
+    user: root
+    password: rootroot
+
+
+cos5:
+    name: c3160-b4
+    mgmtip: 172.22.117.20
+    user: root
+    password: rootroot
+
+
+cos6:
+    name: c3160-b5
+    mgmtip: 172.22.117.21
+    user: root
+    password: rootroot
+
