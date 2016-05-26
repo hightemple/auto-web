@@ -16,7 +16,7 @@
         <form id='run_cmd' action="/run_cmd/" target="_blank" method="post">
             <h2>Testbeds:</h2>
             {% for tb,devices in tb2devices.items %}
-                <label>
+                <p class="text-primary">
                     <input type="checkbox" name={{ tb.name }}> <strong>{{ tb.name }} </strong> [{{ devices|length }}
                     nodes]</input>
 
@@ -35,7 +35,8 @@
 
                     <a href="#" id={{ tb.name }}> view </a>
 
-                </label>
+
+                </p>
 
             {% endfor %}
 
