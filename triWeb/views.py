@@ -120,7 +120,7 @@ def ips(request):
     tb_name = request.GET['Name']
     rtn = ''
     for device in DeviceModel.objects.filter(testbed__name=tb_name,type='cos'):
-        rtn = rtn + '<li>' + device.name + "  " + device.ip + '</li>'
+        rtn = rtn + '<li><strong>' + device.name + "  " + device.ip + '</strong></li>'
     return HttpResponse(rtn)
 
 
