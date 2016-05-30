@@ -11,7 +11,7 @@ from .tools.testbed import TestBed
 
 # Create your views here.
 from triWeb.tools.pxssh import ssh2
-from triWeb.models import TestBedModel,DeviceModel
+from triWeb.models import TestBedModel, DeviceModel
 
 
 def sayHi(request):
@@ -51,35 +51,49 @@ cmd_dict = {
 
 
 def main_page(reqeust):
-    tbs=TestBedModel.objects.all()
+    tbs = TestBedModel.objects.all()
 
-    tb2devices =dict()
+    tb2devices = dict()
     for tb in tbs:
-        tb2devices[tb]=DeviceModel.objects.filter(type='cos',testbed=tb)
+        tb2devices[tb] = DeviceModel.objects.filter(type='cos', testbed=tb)
 
-    return render(reqeust, 'triWeb/main_page.html', {'tb2devices':tb2devices,'groups': groups, 'cmds': cmd_dict})
+    return render(reqeust, 'triWeb/main_page.html', {'tb2devices': tb2devices, 'cmds':cmd_dict})
+
 
 def cos_service(request):
     return render(request, 'triWeb/cos_service.html', {'groups': groups, 'cmds': cmd_dict})
+
 
 def cos_analyze(request):
     now = datetime.datetime.now()
     html = "<html><body> It is now : %s </body></html>" % now
     return HttpResponse(html)
 
+def retrieve_cmd(request):
+    sel_cmd = request.GET['Cmd']
+    exec_cmd = cmd_dict[sel_cmd]
+    return HttpResponse(exec_cmd)
+
+
 def run_cmd(request):
     cmd = request.POST['cmd']
 
     ip_lst = []
-    grp_lst = []
+    tb_lst = []
 
-    for grp in groups.keys():
-        if request.POST.get(grp):
-            grp_lst.append(grp)
-            for ip in groups[grp]:
-                ip_lst.append(ip)
+    for tb in TestBedModel.objects.all():
+        if tb.name in request.POST.keys():
+            tb_lst.append(tb.name)
+            for dv in DeviceModel.objects.filter(type='cos', testbed=tb):
+                ip_lst.append(dv.ip)
+
+    # for grp in groups.keys():
+    #     if request.POST.get(grp):
+    #         tb_lst.append(grp)
+    #         for ip in groups[grp]:
+    #             ip_lst.append(ip)
     rst_dict = pssh_cmd(request, ip_lst, cmd)
-    return render(request, 'triWeb/run_cmd.html', {'ip_list': ip_lst, 'grp_list': grp_lst,
+    return render(request, 'triWeb/run_cmd.html', {'ip_list': ip_lst, 'grp_list': tb_lst,
                                                    'cmd': cmd, 'rst_dict': rst_dict})
 
 
@@ -89,7 +103,7 @@ def cos_config(request):
     ip_lst = groups[grp]
     grp_lst = list(grp)
 
-    rst_dict = pssh_cmd(request,ip_lst,cmd)
+    rst_dict = pssh_cmd(request, ip_lst, cmd)
 
     return render(request, 'triWeb/run_cmd.html', {'ip_list': ip_lst, 'grp_list': grp_lst,
                                                    'cmd': cmd, 'rst_dict': rst_dict})
@@ -119,7 +133,7 @@ def pssh_cmd(request, ips, cmd):
 def ips(request):
     tb_name = request.GET['Name']
     rtn = ''
-    for device in DeviceModel.objects.filter(testbed__name=tb_name,type='cos'):
+    for device in DeviceModel.objects.filter(testbed__name=tb_name, type='cos'):
         rtn = rtn + '<li><strong>' + device.name + "  " + device.ip + '</strong></li>'
     return HttpResponse(rtn)
 
