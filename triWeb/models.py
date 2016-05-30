@@ -7,6 +7,7 @@ from django.db import models
 
 class TestBedModel(models.Model):
     name = models.CharField(max_length=30,primary_key=True, unique=True,default='test')
+    path = models.CharField(max_length=100,unique=True,null=False)
 
     def __str__(self):
         return self.name
