@@ -89,7 +89,7 @@ def run_cmd(request):
                 ip_lst.append(dv.ip)
 
     rst_dict = pssh_cmd(request, ip_lst, cmd)
-    return render(request, 'triWeb/run_cmd.html', {'ip_list': ip_lst, 'grp_list': tb_lst,
+    return render(request, 'triWeb/run_cmd.html', {'ip_list': ip_lst, 'tb_list': tb_lst,
                                                    'cmd': cmd, 'rst_dict': rst_dict})
 
 
@@ -134,15 +134,16 @@ def ips(request):
     return HttpResponse(rtn)
 
 
-def testbeds(request):
-    # jconf = [{"text": "Root node", "children": ["Child node 1", "Child node 2"]}]
-    # fp = "/Users/chenxuan/Workspace/mpd/python3_/cos/cos_xuan.yaml"
-    # with open(fp) as f:
-    #     jconf = list(yaml.load(f))
-    fp = "/Users/chenxuan/Workspace/django/auto/triWeb/tools/cde465.yaml"
-    tb = TestBed()
-    conf_dict = tb.load(fp)
+def testbeds(request,tb_name):
 
-    rtn_lst = tb.parse_to_json_tree(conf_dict)
+    tb_dict = dict()
+    for tbo in TestBedModel.objects.all():
+        tb_dict[tbo.name]=tbo.path
+    if tb_name in tb_dict.keys():
+        fp=tb_dict[tb_name]
+        tb = TestBed()
+        conf_dict = tb.load(fp)
+
+        rtn_lst = tb.parse_to_json_tree(conf_dict)
 
     return render(request, 'triWeb/testbeds.html', {'jconf': json.dumps(rtn_lst)})

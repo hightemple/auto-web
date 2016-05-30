@@ -15,7 +15,7 @@ cos2:
 
 cos3:
     name: c3160-c3
-    mgmtip: 10.74124.96
+    mgmtip: 10.74.124.96
     user: root
     password: rootroot
 

@@ -15,80 +15,48 @@
         <h1>Cos cluster</h1>
         <form id='run_cmd' action="/run_cmd/" target="_blank" method="post">
             <h2>Testbeds:</h2>
+
             {% for tb,devices in tb2devices.items %}
                 <p class="text-primary">
-                    <input type="checkbox" name={{ tb.name }}> <strong>{{ tb.name }} </strong> [{{ devices|length }}
+
+                    <input type="checkbox" name={{ tb.name }}> <a href="testbeds/{{ tb.name }}" ><strong>{{ tb.name }} </strong></a> [{{ devices|length }}
                     nodes]</input>
 
                     <script src="{% static  'bootstrap/js/jquery.min.js' %}"></script>
                     <script>
                         $(document).ready(function () {
+
                             $({{ tb.name }}).click(function () {
                                 $.get('/ips/', {Action: 'get', Name: '{{ tb.name }}'}, function (data, status) {
                                     var content = document.getElementById('ips');
                                     content.innerHTML = 'Server List :' + '<br/>' + data;
 
                                 })
+                            });
+                            $(gen_cmd).click(function () {
+                                var sel_cmd = document.getElementById('sel_cmd').value;
+                                $.get('/retrieve_cmd/', {Action: 'get', Cmd: sel_cmd}, function (data, status) {
+                                    var content = document.getElementById('cmd');
+                                    content.innerHTML =  data;
+
+                                })
                             })
                         })
                     </script>
 
-                    <a href="#" id={{ tb.name }}> view </a>
+                    <a href="#" id={{ tb.name }}> <small>overview</small> </a>
 
 
                 </p>
 
             {% endfor %}
 
-{#            {% print tb2devices %}#}
-{#            {% for tb,devices in tb2devices.items %}#}
-{#                <ul>{{ tb.name }}</ul>#}
-{#                {% for dv in devices %}#}
-{##}
-{#                    <li>{{ dv.name }}  {{ dv.ip }}</li>#}
-{#                {% endfor %}#}
-{#            {% endfor %}#}
-
-{#            {% for tb in testbeds %}#}
-{#                <a href="#" id={{ tb.name }}> {{ tb.name }} </a>#}
-{#            {% endfor %}#}
-{##}
-{#            {% for cos in devices %}#}
-{#                {{ cos.ip }}#}
-{#            {% endfor %}#}
-            <h3>IPs:</h3>
-            <div id="ips">
-
-            </div>
-            </br>
-
-
-            <input name="cmd" type="text">
-            <button type="submit" onclick="myFunction()">RUN</button>
-        </form>
-
-        <div class="container">
-            <div class="page-header">
-                <h2>Services</h2>
-            </div>
-            <form class="form-horizontal" action="/cos_config/" role="form" method="post" target="_blank">
-                <div class="row">
-                    <label class="btn btn-default col-xs-1">Group</label>
-                    <div class="col-xs-2">
-                        <select class="form-control" name="sel_grp" id="sel_grp">
-
-                            {% for group,ips in groups.items %}
-
-                                <option>{{ group }}</option>
-                            {% endfor %}
-
-                        </select>
-                    </div>
-                </div>
             <br>
-                <div class="row">
-                    <label class="btn btn-info col-xs-1">Action</label>
-                    <div class="col-xs-4">
+
+{#            <div class="form-group">#}
+{#                <div class="row">#}
+                    <label for="sel_cmd" class="col-xs-1 btn btn-default">Action</label>
+                    <div class="col-xs-5">
                         <select class="form-control" name="sel_cmd" id="sel_cmd">
 
                             {% for cmd in cmds.keys %}
@@ -98,16 +66,79 @@
 
                         </select>
                     </div>
-                </div>
+                    <a href="#" id=gen_cmd><strong>Do it!</strong></a>
+{#                </div>#}
+{#            </div>#}
 
             <br>
-            <div class="row">
-                <button class="btn btn-warning" type="submit" >DONE</button>
+            <br>
+{#            <div class="row">#}
+            <h3 class="page-header">CMDs:</h3>
+
+            <p class="col-xs-6 " align="left" >
+                <textarea name="cmd" class="form-control" rows="3" id="cmd"></textarea>
+            </p>
+
+                 <button class="btn btn-warning" type="submit">Run</button>
+{#            </div>#}
+
+        <br>
+        <br>
+        <br>
+
+{#        <div class="row">#}
+            <h3 class="page-header">IPs:</h3>
+            <div id="ips">
+
             </div>
+{#        </div>#}
 
-            </form>
 
-        </div>
+{#            <input name="cmd" type="text">#}
+{#            <button type="submit" onclick="myFunction()">RUN</button>#}
+        </form>
+
+{#        <div class="container">#}
+{#            <div class="page-header">#}
+{#                <h2>Services</h2>#}
+{#            </div>#}
+{#            <form class="form-horizontal" action="/cos_config/" role="form" method="post" target="_blank">#}
+{#                <div class="row">#}
+{#                    <label class="btn btn-default col-xs-1">Group</label>#}
+{#                    <div class="col-xs-2">#}
+{#                        <select class="form-control" name="sel_grp" id="sel_grp">#}
+{##}
+{#                            {% for group,ips in groups.items %}#}
+{##}
+{#                                <option>{{ group }}</option>#}
+{#                            {% endfor %}#}
+{##}
+{#                        </select>#}
+{#                    </div>#}
+{#                </div>#}
+{#                <br>#}
+{#                <div class="row">#}
+{#                    <label class="btn btn-info col-xs-1">Action</label>#}
+{#                    <div class="col-xs-4">#}
+{#                        <select class="form-control" name="sel_cmd" id="sel_cmd">#}
+{##}
+{#                            {% for cmd in cmds.keys %}#}
+{##}
+{#                                <option>{{ cmd }}</option>#}
+{#                            {% endfor %}#}
+{##}
+{#                        </select>#}
+{#                    </div>#}
+{#                </div>#}
+{##}
+{#                <br>#}
+{#                <div class="row">#}
+{#                    <button class="btn btn-warning" type="submit">DONE</button>#}
+{#                </div>#}
+{##}
+{#            </form>#}
+{##}
+{#        </div>#}
 
     </div>
 

@@ -14,7 +14,7 @@ urlpatterns = [
     url(r'cos_config', cos_config, name='cos_config'),
     url(r'cos/service', cos_service, name='cos_service'),
     url(r'cos/analyze', cos_analyze, name='cos_analyze'),
-    url(r'testbeds', testbeds, name='testbeds'),
+    url(r'testbeds/(\S+)', testbeds, name='testbeds'),
     url(r'retrieve_cmd',retrieve_cmd)
 
 ]
