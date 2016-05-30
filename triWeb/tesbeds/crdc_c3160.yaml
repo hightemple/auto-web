@@ -3,40 +3,40 @@ testbed:
 
 cos1:
     name: c3160-c1
-    mgmtip: 172.22.117.15
+    mgmtip: 10.74.124.92
     user: root
     password: rootroot
 
 cos2:
-    name: c3160-b1
-    mgmtip: 172.22.117.17
+    name: c3160-c2
+    mgmtip: 10.74.124.94
     user: root
     password: rootroot
 
 cos3:
-    name: c3160-b2
-    mgmtip: 172.22.117.18
+    name: c3160-c3
+    mgmtip: 10.74124.96
     user: root
     password: rootroot
 
 
 cos4:
-    name: c3160-b3
-    mgmtip: 172.22.117.19
+    name: c3160-c4
+    mgmtip: 10.74.124.98
     user: root
     password: rootroot
 
 
 cos5:
-    name: c3160-b4
-    mgmtip: 172.22.117.20
+    name: c3160-c5
+    mgmtip: 10.74.124.100
     user: root
     password: rootroot
 
 
 cos6:
-    name: c3160-b5
-    mgmtip: 172.22.117.21
+    name: c3160-c6
+    mgmtip: 10.74.124.102
     user: root
     password: rootroot
 
