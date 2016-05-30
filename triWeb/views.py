@@ -57,7 +57,7 @@ def main_page(reqeust):
     for tb in tbs:
         tb2devices[tb] = DeviceModel.objects.filter(type='cos', testbed=tb)
 
-    return render(reqeust, 'triWeb/main_page.html', {'tb2devices': tb2devices, 'cmds':cmd_dict})
+    return render(reqeust, 'triWeb/main_page.html', {'tb2devices': tb2devices, 'cmds': cmd_dict})
 
 
 def cos_service(request):
@@ -68,6 +68,7 @@ def cos_analyze(request):
     now = datetime.datetime.now()
     html = "<html><body> It is now : %s </body></html>" % now
     return HttpResponse(html)
+
 
 def retrieve_cmd(request):
     sel_cmd = request.GET['Cmd']
@@ -87,11 +88,6 @@ def run_cmd(request):
             for dv in DeviceModel.objects.filter(type='cos', testbed=tb):
                 ip_lst.append(dv.ip)
 
-    # for grp in groups.keys():
-    #     if request.POST.get(grp):
-    #         tb_lst.append(grp)
-    #         for ip in groups[grp]:
-    #             ip_lst.append(ip)
     rst_dict = pssh_cmd(request, ip_lst, cmd)
     return render(request, 'triWeb/run_cmd.html', {'ip_list': ip_lst, 'grp_list': tb_lst,
                                                    'cmd': cmd, 'rst_dict': rst_dict})
@@ -143,7 +139,7 @@ def testbeds(request):
     # fp = "/Users/chenxuan/Workspace/mpd/python3_/cos/cos_xuan.yaml"
     # with open(fp) as f:
     #     jconf = list(yaml.load(f))
-    fp = "/Users/chenxuan/Workspace/django/auto/triWeb/tools/testbed.yaml"
+    fp = "/Users/chenxuan/Workspace/django/auto/triWeb/tools/cde465.yaml"
     tb = TestBed()
     conf_dict = tb.load(fp)
 
