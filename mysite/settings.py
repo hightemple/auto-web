@@ -39,6 +39,7 @@ INSTALLED_APPS = (
     'debugtools',
     'blog',
     'triWeb',
+    'triWeb.templatetags.myfilter'
 )
 
 MIDDLEWARE_CLASSES = (
