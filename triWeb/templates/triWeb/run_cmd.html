@@ -1,6 +1,7 @@
 {% extends 'triWeb/base.html' %}
 {% load staticfiles %}
 {% load debugtools_tags %}
+{% load myfilter %}
 
 
 {% block title %}
@@ -19,8 +20,15 @@
         <h3> <span class="label label-default">Testbeds </span></h3>
 
         <h4>
-            {% for ip in  ip_list %}
-                <span class="label label-primary">{{ ip }}</span>
+            {% for tb_name,ip_list in tb_dict.items %}
+                <span class="label label-info"><strong>{{ tb_name }}</strong></span>
+                {% for ip in  ip_list %}
+                    <br>
+                    <span class="label label-primary">{{ ip2name|get_prop:ip}} {{ ip }}</span>
+
+                {% endfor %}
+                <br>
+                <br>
             {% endfor %}
         </h4>
 
@@ -37,9 +45,9 @@
             <h2>Result</h2>
         </div>
 
-        {% for node,rst in rst_dict.items %}
+        {% for ip,rst in rst_dict.items %}
             <div class="alert alert-warning" role="alert">
-                <strong> Nodes: {{ node }}</strong>
+                <strong> Nodes: {{ ip2name|get_prop:ip}} {{ ip }}</strong>
             </div>
             <div class="alert alert-info" role="alert">
                 <pre>{{ rst }}</pre>

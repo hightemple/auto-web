@@ -78,18 +78,22 @@ def retrieve_cmd(request):
 
 def run_cmd(request):
     cmd = request.POST['cmd']
-
-    ip_lst = []
-    tb_lst = []
-
+    total_ips=[]
+    tb_dict = {}
+    ip2name = {}
     for tb in TestBedModel.objects.all():
+        ip_lst = []
         if tb.name in request.POST.keys():
-            tb_lst.append(tb.name)
             for dv in DeviceModel.objects.filter(type='cos', testbed=tb):
                 ip_lst.append(dv.ip)
+                total_ips.append(dv.ip)
+            tb_dict[tb.name] = ip_lst
 
-    rst_dict = pssh_cmd(request, ip_lst, cmd)
-    return render(request, 'triWeb/run_cmd.html', {'ip_list': ip_lst, 'tb_list': tb_lst,
+    for dv in DeviceModel.objects.filter(type='cos'):
+        ip2name[dv.ip] = dv.name
+    rst_dict = pssh_cmd(request, total_ips, cmd)
+    # rst_dict={}
+    return render(request, 'triWeb/run_cmd.html', {'tb_dict': tb_dict,'ip2name':ip2name,
                                                    'cmd': cmd, 'rst_dict': rst_dict})
 
 
