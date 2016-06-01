@@ -1,23 +1,27 @@
 testbed:
     name: crdc_c3160_tb
+    type: cos_performance_6nodes_rio_tb
 
 cos1:
     name: c3160-c1
     mgmtip: 10.74.124.92
     user: root
     password: rootroot
+    type: cos
 
 cos2:
     name: c3160-c2
     mgmtip: 10.74.124.94
     user: root
     password: rootroot
+    type: cos
 
 cos3:
     name: c3160-c3
     mgmtip: 10.74.124.96
     user: root
     password: rootroot
+    type: cos
 
 
 cos4:
@@ -25,6 +29,7 @@ cos4:
     mgmtip: 10.74.124.98
     user: root
     password: rootroot
+    type: cos
 
 
 cos5:
@@ -32,6 +37,7 @@ cos5:
     mgmtip: 10.74.124.100
     user: root
     password: rootroot
+    type: cos
 
 
 cos6:
@@ -39,4 +45,5 @@ cos6:
     mgmtip: 10.74.124.102
     user: root
     password: rootroot
+    type: cos
 
