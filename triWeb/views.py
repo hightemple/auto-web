@@ -54,10 +54,30 @@ def main_page(reqeust):
     tbs = TestBedModel.objects.all()
 
     tb2devices = dict()
+
+    # for tb in tbs:
+    #     devices = DeviceModel.objects.filter(testbed=tb)
+    #     for dv in devices:
+    #         if dv.type not in type_list:
+    #             type_list.append(dv.type)
     for tb in tbs:
-        tb2devices[tb] = DeviceModel.objects.filter(type='cos', testbed=tb)
+        # tb2devices[tb] = DeviceModel.objects.filter(type='cos', testbed=tb)
+        devices = DeviceModel.objects.filter(testbed=tb)
+        type2devices = {}
+        type_list = get_devices_types(devices)
+        for dv_type in type_list:
+            type2devices[dv_type] = DeviceModel.objects.filter(type=dv_type, testbed=tb)
+        tb2devices[tb] = type2devices
 
     return render(reqeust, 'triWeb/main_page.html', {'tb2devices': tb2devices, 'cmds': cmd_dict})
+
+
+def get_devices_types(devices):
+    type_list = []
+    for dv in devices:
+        if dv.type not in type_list:
+            type_list.append(dv.type)
+    return type_list
 
 
 def cos_service(request):

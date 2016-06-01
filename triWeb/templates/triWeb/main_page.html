@@ -5,7 +5,7 @@
 
 
 {% block title %}
-    <title>
+    <title xmlns="http://www.w3.org/1999/html">
         COS
     </title>
 {% endblock %}
@@ -16,23 +16,32 @@
         <form id='run_cmd' action="/run_cmd/" target="_blank" method="post">
             <h2>Testbeds:</h2>
 
-            {% for tb,devices in tb2devices.items %}
-                <p class="text-primary">
 
-                    <input type="checkbox" name={{ tb.name }}> <a href="testbeds/{{ tb.name }}" ><strong>{{ tb.name }} </strong></a> [{{ devices|length }}
-                    nodes]</input>
+            {% for tb,type2devices in tb2devices.items %}
+
+                <p class="text-primary">
+{#                    <input type="checkbox" name={{ tb.name }}> <a href="testbeds/{{ tb.name }}" ><strong>{{ tb.name }} </strong></a> [{{ type2devices|length }}#}
+{#                    nodes]</input>#}
+
+                    <a href="testbeds/{{ tb.name }}" style="padding-left:6px"><strong> {{ tb.name }} </strong></a>
+
 
                     <script src="{% static  'bootstrap/js/jquery.min.js' %}"></script>
                     <script>
                         $(document).ready(function () {
-
-                            $({{ tb.name }}).click(function () {
-                                $.get('/ips/', {Action: 'get', Name: '{{ tb.name }}'}, function (data, status) {
-                                    var content = document.getElementById('ips');
-                                    content.innerHTML = 'Server List :' + '<br/>' + data;
-
-                                })
+                            $("#{{ tb.name }}_devices").hide();
+{#                            $({{ tb.name }}).click(function () {#}
+{#                                $.get('/ips/', {Action: 'get', Name: '{{ tb.name }}'}, function (data, status) {#}
+{#                                    var content = document.getElementById('ips');#}
+{#                                    content.innerHTML = 'Server List :' + '<br/>' + data;#}
+{##}
+{#                                })#}
+{#                            });#}
+                            $({{ tb.name }}_show_or_hide).click(function () {
+                                $("#{{ tb.name }}_devices").toggle();
+                                var content = document.getElementById({{ tb.name }}_show_or_hide)
                             });
+
                             $(gen_cmd).click(function () {
                                 var sel_cmd = document.getElementById('sel_cmd').value;
                                 $.get('/retrieve_cmd/', {Action: 'get', Cmd: sel_cmd}, function (data, status) {
@@ -44,12 +53,37 @@
                         })
                     </script>
 
-                    <a href="#" id={{ tb.name }}> <small>overview</small> </a>
-
-
+                    <a href="#" id={{ tb.name }}_show_or_hide> <font size="3"><i><u>show/hide</u></i></font></a>
                 </p>
+                    <div id="{{ tb.name }}_devices">
+                    {% for type,devices in  type2devices.items %}
+                        <div class="row">
+                        <div class="col-xs-6">
+                        <div class="panel panel-default">
+                        <div class="panel-heading">
+                          <h2 class="panel-title">{{ type }}</h2>
+                        </div>
+
+{#                        <ul>{{ type }}</ul>#}
+                        {% for device in devices %}
+                            <div class="list-group-item">
+                              <input type="checkbox"> {{ device.name }} {{ device.ip }} </input>
+                            </div>
+
+{#                            <li>{{ device.name }} {{ device.ip }}</li>#}
+                        {% endfor %}
+                        </div>
+                        </div>
+                        </div>
+
+                    {% endfor %}
+                </div>
+
+
+
 
             {% endfor %}
+
 
             <br>
 
@@ -87,7 +121,7 @@
         <br>
 
 {#        <div class="row">#}
-            <h3 class="page-header">IPs:</h3>
+            <h3 class="page-header">Testbed Overview:</h3>
             <div id="ips">
 
             </div>
