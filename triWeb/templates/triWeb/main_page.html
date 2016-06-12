@@ -67,7 +67,7 @@
 {#                        <ul>{{ type }}</ul>#}
                         {% for device in devices %}
                             <div class="list-group-item">
-                              <input type="checkbox"> {{ device.name }} {{ device.ip }} </input>
+                              <input type="checkbox" name={{ tb.name }}____{{ device.name }}> {{ device.name }} {{ device.ip }} </input>
                             </div>
 
 {#                            <li>{{ device.name }} {{ device.ip }}</li>#}

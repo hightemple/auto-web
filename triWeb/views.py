@@ -101,19 +101,41 @@ def run_cmd(request):
     total_ips=[]
     tb_dict = {}
     ip2name = {}
-    for tb in TestBedModel.objects.all():
-        ip_lst = []
-        if tb.name in request.POST.keys():
-            for dv in DeviceModel.objects.filter(type='cos', testbed=tb):
-                ip_lst.append(dv.ip)
-                total_ips.append(dv.ip)
-            tb_dict[tb.name] = ip_lst
+    device_info_list = []
+    device_string_list = []
+    #get selected devices
+    for key in request.POST.keys():
+        if "____" in key:
+            device_string_list.append(key)
 
-    for dv in DeviceModel.objects.filter(type='cos'):
-        ip2name[dv.ip] = dv.name
+    for dv_str in device_string_list:
+        dv_info = dv_str.split("____")
+
+        try:
+            dv = DeviceModel.objects.get(testbed_id=dv_info[0],name=dv_info[1])
+
+        except DeviceModel.DoesNotExist:
+            pass
+        else:
+            dv_info.append(dv.ip)
+            total_ips.append(dv.ip)
+            device_info_list.append(dv_info)
+
+
+
+    # for tb in TestBedModel.objects.all():
+    #     ip_lst = []
+    #     if tb.name in request.POST.keys():
+    #         for dv in DeviceModel.objects.filter(type='cos', testbed=tb):
+    #             ip_lst.append(dv.ip)
+    #             total_ips.append(dv.ip)
+    #         tb_dict[tb.name] = ip_lst
+    #
+    # for dv in DeviceModel.objects.filter(type='cos'):
+    #     ip2name[dv.ip] = dv.name
     rst_dict = pssh_cmd(request, total_ips, cmd)
     # rst_dict={}
-    return render(request, 'triWeb/run_cmd.html', {'tb_dict': tb_dict,'ip2name':ip2name,
+    return render(request, 'triWeb/run_cmd.html', {'device_info_list':device_info_list,
                                                    'cmd': cmd, 'rst_dict': rst_dict})
 
 

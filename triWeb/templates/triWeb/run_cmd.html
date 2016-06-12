@@ -20,15 +20,20 @@
         <h3> <span class="label label-default">Testbeds </span></h3>
 
         <h4>
-            {% for tb_name,ip_list in tb_dict.items %}
-                <span class="label label-info"><strong>{{ tb_name }}</strong></span>
-                {% for ip in  ip_list %}
-                    <br>
-                    <span class="label label-primary">{{ ip2name|get_prop:ip}} {{ ip }}</span>
+{#            {% for tb_name,ip_list in tb_dict.items %}#}
+{#                <span class="label label-info"><strong>{{ tb_name }}</strong></span>#}
+{#                {% for ip in  ip_list %}#}
+{#                    <br>#}
+{#                    <span class="label label-primary">{{ ip2name|get_prop:ip}} {{ ip }}</span>#}
+{##}
+{#                {% endfor %}#}
+{#                <br>#}
+{#                <br>#}
+{#            {% endfor %}#}
+            {% for info in device_info_list %}
 
-                {% endfor %}
-                <br>
-                <br>
+                <span class="label label-info">{{ info.0 }}   <strong>{{ info.1 }} {{ info.2 }}</strong></span>
+                </br>
             {% endfor %}
         </h4>
 
@@ -45,15 +50,25 @@
             <h2>Result</h2>
         </div>
 
-        {% for ip,rst in rst_dict.items %}
-            <div class="alert alert-warning" role="alert">
-                <strong> Nodes: {{ ip2name|get_prop:ip}} {{ ip }}</strong>
-            </div>
-            <div class="alert alert-info" role="alert">
-                <pre>{{ rst }}</pre>
+{#        {% for ip,rst in rst_dict.items %}#}
+{#            <div class="alert alert-warning" role="alert">#}
+{#                <strong> Nodes: {{ ip2name|get_prop:ip}} {{ ip }}</strong>#}
+{#            </div>#}
+{#            <div class="alert alert-info" role="alert">#}
+{#                <pre>{{ rst }}</pre>#}
+{##}
+{#            </div>#}
+{#        {% endfor %}#}
+    {% for info in device_info_list %}
+        <div class="alert alert-warning" role="alert">
+            <strong> Device:  {{ info.0 }} {{ info.1 }} {{ info.2 }}</strong>
+        </div>
+        <div class="alert alert-info" role="alert">
+            <pre>{{ rst_dict|get_prop:info.2 }}</pre>
 
-            </div>
-        {% endfor %}
+        </div>
+
+    {% endfor %}
 
 
 
