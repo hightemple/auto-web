@@ -11,7 +11,7 @@ from .tools.testbed import TestBed
 
 # Create your views here.
 from triWeb.tools.pxssh import ssh2
-from triWeb.models import TestBedModel, DeviceModel
+from triWeb.models import TestBedModel, DeviceModel, CliModel
 
 
 def sayHi(request):
@@ -71,6 +71,21 @@ def main_page(reqeust):
 
     return render(reqeust, 'triWeb/main_page.html', {'tb2devices': tb2devices, 'cmds': cmd_dict})
 
+def test(reqeust):
+    tbs = TestBedModel.objects.all()
+
+    tb2devices = dict()
+
+
+    for tb in tbs:
+        devices = DeviceModel.objects.filter(testbed=tb)
+        type2devices = {}
+        type_list = get_devices_types(devices)
+        for dv_type in type_list:
+            type2devices[dv_type] = DeviceModel.objects.filter(type=dv_type, testbed=tb)
+        tb2devices[tb] = type2devices
+
+    return render(reqeust, 'triWeb/test.html', {'tb2devices': tb2devices, 'cmds': cmd_dict})
 
 def get_devices_types(devices):
     type_list = []
@@ -193,3 +208,33 @@ def testbeds(request,tb_name):
         rtn_lst = tb.parse_to_json_tree(conf_dict)
 
     return render(request, 'triWeb/testbeds.html', {'jconf': json.dumps(rtn_lst)})
+
+def retrieve_cli_type(request):
+    obj_list = CliModel.objects.values('type').distinct()
+    resp_json = []
+    for obj in obj_list:
+        resp_json.append({'label': obj['type'], 'value': obj['type']})
+
+    return HttpResponse(json.dumps(resp_json))
+
+
+def retrieve_cli_category(request):
+    type = request.GET['tId']
+    obj_list = CliModel.objects.filter(type=type).values('category').distinct()
+    resp_json = []
+    for obj in obj_list:
+        resp_json.append({'label': obj['category'], 'value': obj['category']})
+
+    return HttpResponse(json.dumps(resp_json))
+
+
+def retrieve_cli_name(request):
+    type = request.GET['tId']
+    category = request.GET['cId']
+    obj_list = CliModel.objects.filter(type=type,category=category).values('name','content').distinct()
+    resp_json = []
+    for obj in obj_list:
+        resp_json.append({'label': obj['name'], 'value': obj['content']})
+
+
+    return HttpResponse(json.dumps(resp_json))

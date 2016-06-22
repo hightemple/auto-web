@@ -20,23 +20,49 @@
             {% for tb,type2devices in tb2devices.items %}
 
                 <p class="text-primary">
-{#                    <input type="checkbox" name={{ tb.name }}> <a href="testbeds/{{ tb.name }}" ><strong>{{ tb.name }} </strong></a> [{{ type2devices|length }}#}
-{#                    nodes]</input>#}
+                    {#                    <input type="checkbox" name={{ tb.name }}> <a href="testbeds/{{ tb.name }}" ><strong>{{ tb.name }} </strong></a> [{{ type2devices|length }}#}
+                    {#                    nodes]</input>#}
 
                     <a href="testbeds/{{ tb.name }}" style="padding-left:6px"><strong> {{ tb.name }} </strong></a>
 
 
                     <script src="{% static  'bootstrap/js/jquery.min.js' %}"></script>
+                    <script type="text/javascript" src="{% static 'jslist/jquery.cascadingdropdown.js' %}"></script>
                     <script>
                         $(document).ready(function () {
+                            $('#clicmd').cascadingDropdown({
+                                textKey: 'label',
+                                valueKey: 'value',
+                                selectBoxes: [
+                                    {
+                                        selector: '#cli_type_id',
+                                        paramName: 'tId',
+                                        url: 'get/cli/type'
+                                    },
+                                    {
+                                        selector: '#cli_category_id',
+                                        requires: ['#cli_type_id'],
+                                        paramName: 'cId',
+                                        url: 'get/cli/category',
+
+                                    },
+                                    {
+                                        selector: '#cli_name_id',
+                                        requires: ['#cli_type_id', '#cli_category_id'],
+                                        requireAll: true,
+                                        url: 'get/cli/name',
+                                        onChange: function (value) {
+                                            {#                            alert(value);#}
+                                            {#                            $("#cmd").innerHTML=value;#}
+                                            var content = document.getElementById('cmd');
+                                            content.innerHTML = value;
+                                        }
+                                    }
+
+                                ]
+                            });
                             $("#{{ tb.name }}_devices").hide();
-{#                            $({{ tb.name }}).click(function () {#}
-{#                                $.get('/ips/', {Action: 'get', Name: '{{ tb.name }}'}, function (data, status) {#}
-{#                                    var content = document.getElementById('ips');#}
-{#                                    content.innerHTML = 'Server List :' + '<br/>' + data;#}
-{##}
-{#                                })#}
-{#                            });#}
+
                             $({{ tb.name }}_show_or_hide).click(function () {
                                 $("#{{ tb.name }}_devices").toggle();
                                 var content = document.getElementById({{ tb.name }}_show_or_hide)
@@ -46,135 +72,109 @@
                                 var sel_cmd = document.getElementById('sel_cmd').value;
                                 $.get('/retrieve_cmd/', {Action: 'get', Cmd: sel_cmd}, function (data, status) {
                                     var content = document.getElementById('cmd');
-                                    content.innerHTML =  data;
+                                    content.innerHTML = data;
 
                                 })
-                            })
+                            });
+
+
                         })
+
+
                     </script>
 
                     <a href="#" id={{ tb.name }}_show_or_hide> <font size="3"><i><u>show/hide</u></i></font></a>
                 </p>
-                    <div id="{{ tb.name }}_devices">
+                <div id="{{ tb.name }}_devices">
                     {% for type,devices in  type2devices.items %}
                         <div class="row">
-                        <div class="col-xs-6">
-                        <div class="panel panel-default">
-                        <div class="panel-heading">
-                          <h2 class="panel-title">{{ type }}</h2>
-                        </div>
+                            <div class="col-xs-6">
+                                <div class="panel panel-default">
+                                    <div class="panel-heading">
+                                        <h2 class="panel-title">{{ type }}</h2>
+                                    </div>
+                                    {% for device in devices %}
+                                        <div class="list-group-item">
+                                            <input type="checkbox"
+                                                   name={{ tb.name }}____{{ device.name }}> {{ device.name }} {{ device.ip }} </input>
+                                        </div>
 
-{#                        <ul>{{ type }}</ul>#}
-                        {% for device in devices %}
-                            <div class="list-group-item">
-                              <input type="checkbox" name={{ tb.name }}____{{ device.name }}> {{ device.name }} {{ device.ip }} </input>
+                                    {% endfor %}
+                                </div>
                             </div>
-
-{#                            <li>{{ device.name }} {{ device.ip }}</li>#}
-                        {% endfor %}
-                        </div>
-                        </div>
                         </div>
 
                     {% endfor %}
                 </div>
 
 
-
-
             {% endfor %}
 
-
             <br>
 
-{#            <div class="form-group">#}
-{#                <div class="row">#}
-                    <label for="sel_cmd" class="col-xs-1 btn btn-default">Action</label>
-                    <div class="col-xs-5">
-                        <select class="form-control" name="sel_cmd" id="sel_cmd">
+            <h2>Services:</h2>
 
-                            {% for cmd in cmds.keys %}
+            <div class="form-inline" id="clicmd">
+                <div class="input-group">
+                    <select class="form-control" id="cli_type_id">
+                        <option value="">Please select type</option>
+                    </select>
+                </div>
+                <div class="input-group">
+                    <select class="form-control" id="cli_category_id">
+                        <option value="">Please select category</option>
+                    </select>
+                </div>
+                <div class="input-group">
+                    <select class="form-control" id="cli_name_id">
+                        <option value="">Please select name</option>
+                    </select>
+                </div>
 
-                                <option>{{ cmd }}</option>
-                            {% endfor %}
+            </div>
 
-                        </select>
-                    </div>
-                    <a href="#" id=gen_cmd><strong>Do it!</strong></a>
-{#                </div>#}
-{#            </div>#}
+            {#            <label for="sel_cmd" class="col-xs-1 btn btn-default">Action</label>#}
+            {#            <div class="col-xs-5">#}
+            {#                <select class="form-control" name="sel_cmd" id="sel_cmd">#}
+            {##}
+            {#                    {% for cmd in cmds.keys %}#}
+            {##}
+            {#                        <option>{{ cmd }}</option>#}
+            {#                    {% endfor %}#}
+            {##}
+            {#                </select>#}
+            {#            </div>#}
+            {#            <a href="#" id=gen_cmd><strong>Do it!</strong></a>#}
+
 
             <br>
             <br>
-{#            <div class="row">#}
+
             <h3 class="page-header">CMDs:</h3>
 
-            <p class="col-xs-6 " align="left" >
+            <p class="col-xs-6 " align="left">
                 <textarea name="cmd" class="form-control" rows="3" id="cmd"></textarea>
             </p>
 
-                 <button class="btn btn-warning" type="submit">Run</button>
-{#            </div>#}
+            <button class="btn btn-warning" type="submit">Run</button>
 
-        <br>
-        <br>
-        <br>
 
-{#        <div class="row">#}
-            <h3 class="page-header">Testbed Overview:</h3>
+            <br>
+            <br>
+            <br>
+
+
+            <h3 class="page-header sr-only">Testbed Overview:</h3>
             <div id="ips">
 
             </div>
-{#        </div>#}
 
-
-{#            <input name="cmd" type="text">#}
-{#            <button type="submit" onclick="myFunction()">RUN</button>#}
         </form>
 
-{#        <div class="container">#}
-{#            <div class="page-header">#}
-{#                <h2>Services</h2>#}
-{#            </div>#}
-{#            <form class="form-horizontal" action="/cos_config/" role="form" method="post" target="_blank">#}
-{#                <div class="row">#}
-{#                    <label class="btn btn-default col-xs-1">Group</label>#}
-{#                    <div class="col-xs-2">#}
-{#                        <select class="form-control" name="sel_grp" id="sel_grp">#}
-{##}
-{#                            {% for group,ips in groups.items %}#}
-{##}
-{#                                <option>{{ group }}</option>#}
-{#                            {% endfor %}#}
-{##}
-{#                        </select>#}
-{#                    </div>#}
-{#                </div>#}
-{#                <br>#}
-{#                <div class="row">#}
-{#                    <label class="btn btn-info col-xs-1">Action</label>#}
-{#                    <div class="col-xs-4">#}
-{#                        <select class="form-control" name="sel_cmd" id="sel_cmd">#}
-{##}
-{#                            {% for cmd in cmds.keys %}#}
-{##}
-{#                                <option>{{ cmd }}</option>#}
-{#                            {% endfor %}#}
-{##}
-{#                        </select>#}
-{#                    </div>#}
-{#                </div>#}
-{##}
-{#                <br>#}
-{#                <div class="row">#}
-{#                    <button class="btn btn-warning" type="submit">DONE</button>#}
-{#                </div>#}
-{##}
-{#            </form>#}
-{##}
-{#        </div>#}
 
     </div>
+
+
 
 
 {% endblock content %}

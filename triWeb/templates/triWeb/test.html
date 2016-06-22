@@ -1,0 +1,102 @@
+{% extends 'triWeb/base.html' %}
+{% load debugtools_tags %}
+{% load staticfiles %}
+
+
+
+
+{% block title %}
+    <title xmlns="http://www.w3.org/1999/html">
+        COS
+    </title>
+{% endblock %}
+
+
+{% block content %}
+    <div class="jumbotron">
+        <h1>Cos cluster</h1>
+        <form id='run_cmd' action="/run_cmd/" target="_blank" method="post">
+            <h2>CLI:</h2>
+
+
+            <div class="form-inline" id="clicmd">
+                <div class="input-group">
+                    <select class="form-control" id="cli_type_id">
+                        <option value="">Please select type</option>
+                    </select>
+                </div>
+                <div class="input-group">
+                    <select class="form-control" id="cli_category_id">
+                        <option value="">Please select category</option>
+                    </select>
+                </div>
+                <div class="input-group">
+                    <select class="form-control" id="cli_name_id">
+                        <option value="">Please select name</option>
+                    </select>
+                </div>
+
+            </div>
+
+            <p class="col-xs-6 " align="left">
+                <textarea name="cmd" class="form-control" rows="3" id="cmd"></textarea>
+            </p>
+
+            <button class="btn btn-warning" type="submit">Run</button>
+        </form>
+
+        <br>
+        <br>
+
+
+
+
+
+    <!-- Scripts here -->
+
+    <script type="text/javascript"
+            src="{% static 'jslist/jquery.cascadingdropdown.js' %}"></script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+
+
+            $('#clicmd').cascadingDropdown({
+                textKey: 'label',
+                valueKey: 'value',
+                selectBoxes: [
+                    {
+                        selector: '#cli_type_id',
+                        paramName: 'tId',
+                        url: 'get/cli/type'
+                    },
+                    {
+                        selector: '#cli_category_id',
+                        requires: ['#cli_type_id'],
+                        paramName: 'cId',
+                        url: 'get/cli/category',
+
+                    },
+                    {
+                        selector: '#cli_name_id',
+                        requires: ['#cli_type_id', '#cli_category_id'],
+                        requireAll: true,
+                        url: 'get/cli/name',
+                        onChange: function (value) {
+{#                            alert(value);#}
+                            {#                            $("#cmd").innerHTML=value;#}
+                            var content = document.getElementById('cmd');
+                            content.innerHTML = value;
+                        }
+                    }
+
+                ]
+            });
+
+
+        });
+    </script>
+
+
+{% endblock content %}
+
+
