@@ -41,13 +41,6 @@ def disk(request):
     return render(request, 'triWeb/disk.html', {'disk_usage': disk_usage, 'name_dict': name_dict})
 
 
-# groups = dict()
-# # groups['crdc'] = ['10.74.124.92','10.74.124.94','10.74.124.96','10.74.124.98','10.74.124.100','10.74.124.102']
-# groups['crdc'] = ['10.74.124.92', '10.74.124.94', '10.74.124.96']
-# cmd_dict = {
-#     'Show all service': "service --status-all",
-#     'Show intalled packages': 'cos_pkgs',
-# }
 
 
 def main_page(reqeust):
@@ -55,13 +48,8 @@ def main_page(reqeust):
 
     tb2devices = dict()
 
-    # for tb in tbs:
-    #     devices = DeviceModel.objects.filter(testbed=tb)
-    #     for dv in devices:
-    #         if dv.type not in type_list:
-    #             type_list.append(dv.type)
+
     for tb in tbs:
-        # tb2devices[tb] = DeviceModel.objects.filter(type='cos', testbed=tb)
         devices = DeviceModel.objects.filter(testbed=tb)
         type2devices = {}
         type_list = get_devices_types(devices)
@@ -69,7 +57,7 @@ def main_page(reqeust):
             type2devices[dv_type] = DeviceModel.objects.filter(type=dv_type, testbed=tb)
         tb2devices[tb] = type2devices
 
-    return render(reqeust, 'triWeb/main_page.html', {'tb2devices': tb2devices, 'cmds': cmd_dict})
+    return render(reqeust, 'triWeb/main_page.html', {'tb2devices': tb2devices})
 
 def test(reqeust):
     tbs = TestBedModel.objects.all()
@@ -85,7 +73,7 @@ def test(reqeust):
             type2devices[dv_type] = DeviceModel.objects.filter(type=dv_type, testbed=tb)
         tb2devices[tb] = type2devices
 
-    return render(reqeust, 'triWeb/test.html', {'tb2devices': tb2devices, 'cmds': cmd_dict})
+    return render(reqeust, 'triWeb/test.html', {'tb2devices': tb2devices})
 
 def get_devices_types(devices):
     type_list = []
@@ -95,20 +83,11 @@ def get_devices_types(devices):
     return type_list
 
 
-def cos_service(request):
-    return render(request, 'triWeb/cos_service.html', {'groups': groups, 'cmds': cmd_dict})
-
-
 def cos_analyze(request):
     now = datetime.datetime.now()
     html = "<html><body> It is now : %s </body></html>" % now
     return HttpResponse(html)
 
-
-# def retrieve_cmd(request):
-#     sel_cmd = request.GET['Cmd']
-#     exec_cmd = cmd_dict[sel_cmd]
-#     return HttpResponse(exec_cmd)
 
 
 def run_cmd(request):
@@ -138,32 +117,12 @@ def run_cmd(request):
 
 
 
-    # for tb in TestBedModel.objects.all():
-    #     ip_lst = []
-    #     if tb.name in request.POST.keys():
-    #         for dv in DeviceModel.objects.filter(type='cos', testbed=tb):
-    #             ip_lst.append(dv.ip)
-    #             total_ips.append(dv.ip)
-    #         tb_dict[tb.name] = ip_lst
-    #
-    # for dv in DeviceModel.objects.filter(type='cos'):
-    #     ip2name[dv.ip] = dv.name
     rst_dict = pssh_cmd(request, total_ips, cmd)
     # rst_dict={}
     return render(request, 'triWeb/run_cmd.html', {'device_info_list':device_info_list,
                                                    'cmd': cmd, 'rst_dict': rst_dict})
 
 
-def cos_config(request):
-    cmd = cmd_dict[request.POST.get('sel_cmd')]
-    grp = request.POST.get('sel_grp')
-    ip_lst = groups[grp]
-    grp_lst = list(grp)
-
-    rst_dict = pssh_cmd(request, ip_lst, cmd)
-
-    return render(request, 'triWeb/run_cmd.html', {'ip_list': ip_lst, 'grp_list': grp_lst,
-                                                   'cmd': cmd, 'rst_dict': rst_dict})
 
 
 def pssh_cmd(request, ips, cmd):
