@@ -1,7 +1,7 @@
 from django.conf.urls import url
 # from . import views
 from triWeb.views import sayHi, current_time, cpu, disk, main_page, run_cmd, \
-    ips, cos_config, cos_service, cos_analyze, testbeds, retrieve_cmd ,test, \
+    ips, cos_config, cos_service, cos_analyze, testbeds, test, \
     retrieve_cli_type, retrieve_cli_category , retrieve_cli_name
 
 urlpatterns = [
@@ -16,7 +16,6 @@ urlpatterns = [
     url(r'cos/service', cos_service, name='cos_service'),
     url(r'cos/analyze', cos_analyze, name='cos_analyze'),
     url(r'testbeds/(\S+)', testbeds, name='testbeds'),
-    url(r'retrieve_cmd',retrieve_cmd),
 
 
     url(r'test',test),
