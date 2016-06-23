@@ -16,73 +16,51 @@
         <form id='run_cmd' action="/run_cmd/" target="_blank" method="post">
             <h2>Testbeds:</h2>
 
+            <!-- Select the expected cli -->
+            <script src="{% static  'bootstrap/js/jquery.min.js' %}"></script>
+            <script type="text/javascript" src="{% static 'jslist/jquery.cascadingdropdown.js' %}"></script>
+            <script>
+                $(document).ready(function () {
+                    $('#clicmd').cascadingDropdown({
+                        textKey: 'label',
+                        valueKey: 'value',
+                        selectBoxes: [
+                            {
+                                selector: '#cli_type_id',
+                                paramName: 'tId',
+                                url: 'get/cli/type'
+                            },
+                            {
+                                selector: '#cli_category_id',
+                                requires: ['#cli_type_id'],
+                                paramName: 'cId',
+                                url: 'get/cli/category',
 
-            {% for tb,type2devices in tb2devices.items %}
-
-                <p class="text-primary">
-                    {#                    <input type="checkbox" name={{ tb.name }}> <a href="testbeds/{{ tb.name }}" ><strong>{{ tb.name }} </strong></a> [{{ type2devices|length }}#}
-                    {#                    nodes]</input>#}
-
-                    <a href="testbeds/{{ tb.name }}" style="padding-left:6px"><strong> {{ tb.name }} </strong></a>
-
-
-                    <script src="{% static  'bootstrap/js/jquery.min.js' %}"></script>
-                    <script type="text/javascript" src="{% static 'jslist/jquery.cascadingdropdown.js' %}"></script>
-                    <script>
-                        $(document).ready(function () {
-                            $('#clicmd').cascadingDropdown({
-                                textKey: 'label',
-                                valueKey: 'value',
-                                selectBoxes: [
-                                    {
-                                        selector: '#cli_type_id',
-                                        paramName: 'tId',
-                                        url: 'get/cli/type'
-                                    },
-                                    {
-                                        selector: '#cli_category_id',
-                                        requires: ['#cli_type_id'],
-                                        paramName: 'cId',
-                                        url: 'get/cli/category',
-
-                                    },
-                                    {
-                                        selector: '#cli_name_id',
-                                        requires: ['#cli_type_id', '#cli_category_id'],
-                                        requireAll: true,
-                                        url: 'get/cli/name',
-                                        onChange: function (value) {
-                                            {#                            alert(value);#}
-                                            {#                            $("#cmd").innerHTML=value;#}
-                                            var content = document.getElementById('cmd');
-                                            content.innerHTML = value;
-                                        }
-                                    }
-
-                                ]
-                            });
-                            $("#{{ tb.name }}_devices").hide();
-
-                            $({{ tb.name }}_show_or_hide).click(function () {
-                                $("#{{ tb.name }}_devices").toggle();
-                                var content = document.getElementById({{ tb.name }}_show_or_hide)
-                            });
-
-                            $(gen_cmd).click(function () {
-                                var sel_cmd = document.getElementById('sel_cmd').value;
-                                $.get('/retrieve_cmd/', {Action: 'get', Cmd: sel_cmd}, function (data, status) {
+                            },
+                            {
+                                selector: '#cli_name_id',
+                                requires: ['#cli_type_id', '#cli_category_id'],
+                                requireAll: true,
+                                url: 'get/cli/name',
+                                onChange: function (value) {
+                                    {#                            alert(value);#}
+                                    {#                            $("#cmd").innerHTML=value;#}
                                     var content = document.getElementById('cmd');
-                                    content.innerHTML = data;
+                                    content.innerHTML = value;
+                                }
+                            }
 
-                                })
-                            });
+                        ]
+                    });
 
 
-                        })
+                })
 
-
-                    </script>
-
+            <!-- hide/show the testbed detail info -->
+            </script>
+            {% for tb,type2devices in tb2devices.items %}
+                <p class="text-primary">
+                    <a href="testbeds/{{ tb.name }}" style="padding-left:6px"><strong> {{ tb.name }} </strong></a>
                     <a href="#" id={{ tb.name }}_show_or_hide> <font size="3"><i><u>show/hide</u></i></font></a>
                 </p>
                 <div id="{{ tb.name }}_devices">
@@ -107,7 +85,20 @@
                     {% endfor %}
                 </div>
 
+                <script>
+                    $(document).ready(function () {
 
+                        $("#{{ tb.name }}_devices").hide();
+
+                        $({{ tb.name }}_show_or_hide).click(function () {
+                            $("#{{ tb.name }}_devices").toggle();
+                            var content = document.getElementById({{ tb.name }}_show_or_hide)
+                        });
+
+                    })
+
+
+                </script>
             {% endfor %}
 
             <br>
@@ -168,6 +159,7 @@
             <div id="ips">
 
             </div>
+
 
         </form>
 

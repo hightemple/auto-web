@@ -41,13 +41,13 @@ def disk(request):
     return render(request, 'triWeb/disk.html', {'disk_usage': disk_usage, 'name_dict': name_dict})
 
 
-groups = dict()
-# groups['crdc'] = ['10.74.124.92','10.74.124.94','10.74.124.96','10.74.124.98','10.74.124.100','10.74.124.102']
-groups['crdc'] = ['10.74.124.92', '10.74.124.94', '10.74.124.96']
-cmd_dict = {
-    'Show all service': "service --status-all",
-    'Show intalled packages': 'cos_pkgs',
-}
+# groups = dict()
+# # groups['crdc'] = ['10.74.124.92','10.74.124.94','10.74.124.96','10.74.124.98','10.74.124.100','10.74.124.102']
+# groups['crdc'] = ['10.74.124.92', '10.74.124.94', '10.74.124.96']
+# cmd_dict = {
+#     'Show all service': "service --status-all",
+#     'Show intalled packages': 'cos_pkgs',
+# }
 
 
 def main_page(reqeust):
@@ -105,10 +105,10 @@ def cos_analyze(request):
     return HttpResponse(html)
 
 
-def retrieve_cmd(request):
-    sel_cmd = request.GET['Cmd']
-    exec_cmd = cmd_dict[sel_cmd]
-    return HttpResponse(exec_cmd)
+# def retrieve_cmd(request):
+#     sel_cmd = request.GET['Cmd']
+#     exec_cmd = cmd_dict[sel_cmd]
+#     return HttpResponse(exec_cmd)
 
 
 def run_cmd(request):
