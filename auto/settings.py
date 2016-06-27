@@ -1,5 +1,5 @@
 """
-Django settings for mysite project.
+Django settings for auto project.
 
 For more information on this file, see
 https://docs.djangoproject.com/en/1.7/topics/settings/
@@ -52,7 +52,7 @@ MIDDLEWARE_CLASSES = (
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 )
 
-ROOT_URLCONF = 'mysite.urls'
+ROOT_URLCONF = 'auto.urls'
 
 WSGI_APPLICATION = 'auto.wsgi.application'
 
