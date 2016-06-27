@@ -2,7 +2,7 @@ from testbed import TestBed
 import json
 
 def test_load_yaml():
-    fp = "./testbed.yaml"
+    fp = "./cde465.yaml"
     tb = TestBed()
     conf_dict = tb.load(fp)
     # for key, value in conf_dict.items():

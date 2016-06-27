@@ -54,7 +54,7 @@ MIDDLEWARE_CLASSES = (
 
 ROOT_URLCONF = 'mysite.urls'
 
-WSGI_APPLICATION = 'mysite.wsgi.application'
+WSGI_APPLICATION = 'auto.wsgi.application'
 
 
 # Database
@@ -66,7 +66,7 @@ DATABASES = {
         'NAME': 'testbeds',
         'USER': 'root',
         'PASSWORD': '123456',
-        'HOST': '',
+        'HOST': '10.124.27.18',
         'PORT': '',
     }
 }
