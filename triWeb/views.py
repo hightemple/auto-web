@@ -7,6 +7,8 @@ import threading
 import json
 import yaml
 import queue
+
+from os.path import dirname, abspath, join
 from .tools.testbed import TestBed
 
 # Create your views here.
@@ -154,12 +156,12 @@ def ips(request):
 
 
 def testbeds(request,tb_name):
-
+    APP_DIR = dirname(abspath(__file__))
     tb_dict = dict()
     for tbo in TestBedModel.objects.all():
         tb_dict[tbo.name]=tbo.path
     if tb_name in tb_dict.keys():
-        fp=tb_dict[tb_name]
+        fp=join(APP_DIR,"testbeds",tb_dict[tb_name])
         tb = TestBed()
         conf_dict = tb.load(fp)
 

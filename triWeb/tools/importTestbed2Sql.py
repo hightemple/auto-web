@@ -12,13 +12,16 @@ def main():
     from triWeb.tools.testbed import TestBed
     import re
 
-    tb_dir = "/Users/chenxuan/Workspace/django/auto/triWeb/tesbeds"
+    TestBedModel.objects.all().delete()
+    DeviceModel.objects.all().delete()
+
+    tb_dir = "/Users/chenxuan/Workspace/django/auto/triWeb/testbeds"
     fps = os.listdir(tb_dir)
 
     for fp in fps:
-        fp = os.path.join(tb_dir,fp)
+        abs_fp = os.path.join(tb_dir,fp)
         tb = TestBed()
-        conf_dict = tb.load(fp)
+        conf_dict = tb.load(abs_fp)
 
         # print(conf_dict)
         if 'testbed' in conf_dict and 'name' in conf_dict['testbed']:
@@ -40,7 +43,7 @@ def main():
                                                   )
             if re.search('cosbench[0-9]+', key):
                 DeviceModel.objects.get_or_create(name=subDict['name'],
-                                                  ip=subDict['interip'],
+                                                  ip=subDict['mgmtip'],
                                                   user=subDict['user'],
                                                   password=subDict['password'],
                                                   type='cosbench',
