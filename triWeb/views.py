@@ -147,7 +147,7 @@ def pssh_cmd(request, dv_info_list, cmd):
     return rst_dict
 
 
-def ips(request):
+def get_sel_devices(request):
     tb_name = request.GET['Name']
     rtn = ''
     for device in DeviceModel.objects.filter(testbed__name=tb_name, type='cos'):

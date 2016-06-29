@@ -14,7 +14,7 @@
     <div class="jumbotron">
         <h1>Cos cluster</h1>
         <form id='run_cmd' action="/run_cmd/" target="_blank" method="post">
-            <h2>Testbeds:</h2>
+
 
             <!-- Select the expected cli -->
             <script src="{% static  'bootstrap/js/jquery.min.js' %}"></script>
@@ -53,53 +53,82 @@
                         ]
                     });
 
-
-                })
-
-            <!-- hide/show the testbed detail info -->
-            </script>
-            {% for tb,type2devices in tb2devices.items %}
-                <p class="text-primary">
-                    <a href="testbeds/{{ tb.name }}" style="padding-left:6px"><strong> {{ tb.name }} </strong></a>
-                    <a href="#" id={{ tb.name }}_show_or_hide> <font size="3"><i><u>show/hide</u></i></font></a>
-                </p>
-                <div id="{{ tb.name }}_devices">
-                    {% for type,devices in  type2devices.items %}
-                        <div class="row">
-                            <div class="col-xs-6">
-                                <div class="panel panel-default">
-                                    <div class="panel-heading">
-                                        <h2 class="panel-title">{{ type }}</h2>
-                                    </div>
-                                    {% for device in devices %}
-                                        <div class="list-group-item">
-                                            <input type="checkbox"
-                                                   name={{ tb.name }}____{{ device.name }}> {{ device.name }} {{ device.ip }} </input>
-                                        </div>
-
-                                    {% endfor %}
-                                </div>
-                            </div>
-                        </div>
-
-                    {% endfor %}
-                </div>
-
-                <script>
-                    $(document).ready(function () {
-
-                        $("#{{ tb.name }}_devices").hide();
-
-                        $({{ tb.name }}_show_or_hide).click(function () {
-                            $("#{{ tb.name }}_devices").toggle();
-                            var content = document.getElementById({{ tb.name }}_show_or_hide)
+                    $(testbeds).click(function () {
+                        var selected = [];
+                        $('.data input:checked').each(function () {
+                            selected.push($(this).val());
                         });
-
+                        console.log(selected);
+                        rtn_str = ""
+                        for (var i = 0; i < selected.length; i++) {
+                            rtn_str = rtn_str + '<li><strong>' + selected[i] + '</strong></li>'
+                        }
+                        console.log(rtn_str)
+                        document.getElementById("sel_devices").innerHTML = rtn_str
                     })
 
 
-                </script>
-            {% endfor %}
+                })
+
+
+            </script>
+            <h2>Testbeds: <a href="#" id="testbeds"><u>
+                <small>overview</small>
+            </u> </a>
+            </h2>
+            <div class="data">
+                {% for tb,type2devices in tb2devices.items %}
+                    <p class="text-primary">
+                        <a href="testbeds/{{ tb.name }}" style="padding-left:6px"><strong> {{ tb.name }} </strong></a>
+                        <a href="#" id={{ tb.name }}_show_or_hide> <font size="3"><i><u>show/hide</u></i></font></a>
+                    </p>
+                    <div id="{{ tb.name }}_devices">
+                        {% for type,devices in  type2devices.items %}
+                            <div class="row">
+                                <div class="col-xs-6">
+                                    <div class="panel panel-default">
+                                        <div class="panel-heading">
+                                            <h2 class="panel-title">{{ type }}</h2>
+                                        </div>
+                                        {% for device in devices %}
+                                            <div class="list-group-item">
+                                                <input type="checkbox" name={{ tb.name }}____{{ device.name }}
+                                                       value="{{ tb.name }} {{ device.name }} {{ device.ip }}">
+
+                                                {{ device.name }} {{ device.ip }}
+                                                </input>
+                                            </div>
+
+                                        {% endfor %}
+                                    </div>
+                                </div>
+                            </div>
+
+                        {% endfor %}
+                    </div>
+
+
+                    <!-- hide/show the testbed detail info -->
+                    <script>
+                        $(document).ready(function () {
+
+                            $("#{{ tb.name }}_devices").hide();
+
+                            $({{ tb.name }}_show_or_hide).click(function () {
+                                $("#{{ tb.name }}_devices").toggle();
+                                var content = document.getElementById({{ tb.name }}_show_or_hide)
+                            });
+
+                        })
+
+
+                    </script>
+                {% endfor %}
+                <h4 class="page-header"> Selected Devices</h4>
+                <div id="sel_devices">
+
+                </div>
+            </div>
 
             <br>
 
@@ -124,19 +153,6 @@
 
             </div>
 
-            {#            <label for="sel_cmd" class="col-xs-1 btn btn-default">Action</label>#}
-            {#            <div class="col-xs-5">#}
-            {#                <select class="form-control" name="sel_cmd" id="sel_cmd">#}
-            {##}
-            {#                    {% for cmd in cmds.keys %}#}
-            {##}
-            {#                        <option>{{ cmd }}</option>#}
-            {#                    {% endfor %}#}
-            {##}
-            {#                </select>#}
-            {#            </div>#}
-            {#            <a href="#" id=gen_cmd><strong>Do it!</strong></a>#}
-
 
             <br>
             <br>
@@ -153,12 +169,6 @@
             <br>
             <br>
             <br>
-
-
-            <h3 class="page-header sr-only">Testbed Overview:</h3>
-            <div id="ips">
-
-            </div>
 
 
         </form>
