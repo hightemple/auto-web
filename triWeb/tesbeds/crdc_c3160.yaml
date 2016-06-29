@@ -47,3 +47,10 @@ cos6:
     password: rootroot
     type: cos
 
+cosbench0:
+    name: cosben0
+    mgmtip: 10.74.17.145
+    user: root
+    password: cisco123
+    type: cosbench
+

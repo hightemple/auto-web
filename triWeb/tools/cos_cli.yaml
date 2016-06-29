@@ -21,14 +21,14 @@ cassandra:
 
 tcp:
     tcp_session_status: cat /proc/calypso/stats/tcp_stats
-    tcp_active_session: fname=`ls -lt /arroyo/log | egrep protocoltiming.log.[0-9\-]+ | awk '{print $9}' | head -1`; tail -n 100 /arroyo/log/$fname | grep "TCP PUT"
-    tcp_retransmit: fname=`ls -lt /arroyo/log | egrep protocoltiming.log.[0-9\-]+ | awk '{print $9}' | head -1`; tail -n 100 /arroyo/log/$fname | grep Retransmit
+    tcp_active_session: fname=`ls -lt /arroyo/log | egrep protocoltiming.log.[0-9\-]+ | awk '{print $9}' | head -1`; tail -n 200 /arroyo/log/$fname | grep 'TCP PUT'
+    tcp_retransmit: fname=`ls -lt /arroyo/log | egrep protocoltiming.log.[0-9\-]+ | awk '{print $9}' | head -1`; tail -n 200 /arroyo/log/$fname | grep Retransmit
 
 cpu:
     cpu_status: cat /proc/calypso/stats/cpu_stats
 
 http:
-    http_error_log: fname=`ls -lt /arroyo/log | egrep http.log.[0-9\-]+ | awk '{print $9}' | head -1`; cat /arroyo/log/$fname | egrep --color " [3-9][0-9][0-9] |ERROR"
+    http_error_log: fname=`ls -lt /arroyo/log | egrep http.log.[0-9\-]+ | awk '{print $9}' | head -1`; tail -n 1000 /arroyo/log/$fname | egrep --color ' [3-9][0-9][0-9] |ERROR'
 
 assert:
     assert_log: fname=`ls -lt /arroyo/log | egrep prodassert.log.[0-9\-]+ | awk '{print $9}' | head -1`; cat /arroyo/log/$fname
@@ -38,12 +38,12 @@ kernel:
 
 memory:
     memory_status: cat /proc/calypso/stats/mem_stats
-    memory_available: fname=`ls -lt /arroyo/log | egrep protocoltiming.log.[0-9\-]+ | awk '{print $9}' | head -1`; tail -n 100 /arroyo/log/$fname | grep Avail
+    memory_available: fname=`ls -lt /arroyo/log | egrep protocoltiming.log.[0-9\-]+ | awk '{print $9}' | head -1`; tail -n 200 /arroyo/log/$fname | grep Avail
 
 disk:
     disk_status: cat /proc/calypso/stats/disk_stats
     disk_info: cat /proc/calypso/status/diskinfo
-    disk_write_read_bps: fname=`ls -lt /arroyo/log | egrep protocoltiming.log.[0-9\-]+ | awk '{print $9}' | head -1`; tail -n 100 /arroyo/log/$fname | grep dirty
+    disk_write_read_bps: fname=`ls -lt /arroyo/log | egrep protocoltiming.log.[0-9\-]+ | awk '{print $9}' | head -1`; tail -n 200 /arroyo/log/$fname | grep dirty
 
 service:
     service_status_all: service --status-all
@@ -56,8 +56,12 @@ config:
     subnet_table_file: cat /arroyo/test/SubnetTable
 
 network:
+    ifconfig: ifconfig
     ip_link: ip link
     send_receive_bps: fname=`ls -lt /arroyo/log | egrep protocoltiming.log.[0-9\-]+ | awk '{print $9}' | head -1`; tail -n 100 /arroyo/log/$fname | grep Snd
 
 goid:
-    goid_number: fname=`ls -lt /arroyo/log | egrep protocoltiming.log.[0-9\-]+ | awk '{print $9}' | head -1`; tail -n 100 /arroyo/log/$fname | grep Goid
+    goid_number: fname=`ls -lt /arroyo/log | egrep protocoltiming.log.[0-9\-]+ | awk '{print $9}' | head -1`; tail -n 200 /arroyo/log/$fname | grep Goid
+
+package:
+    cos_package: cos_pkgs
