@@ -10,8 +10,8 @@ import yaml
 
 def main():
     from triWeb.models import CliModel
-    from triWeb.tools.testbed import TestBed
-    import re
+
+    CliModel.objects.all().delete()
 
     fp = "/Users/chenxuan/Workspace/django/auto/triWeb/tools/cos_cli.yaml"
 
