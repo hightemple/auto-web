@@ -93,7 +93,7 @@ def cos_analyze(request):
 
 
 def run_cmd(request):
-    cmd = request.POST['cmd']
+    cmd = request.POST['cmd'].strip()
     dv_ssh_info_list=[]
 
     device_info_list = []
@@ -137,7 +137,7 @@ def pssh_cmd(request, dv_info_list, cmd):
 
     for dv in dv_info_list:
         thread_list.append(
-            threading.Thread(target=sig_ssh, name="t_ssh_to_%s" % dv['ip'], args=(dv['ip'], dv['user'], dv['password'], cmd)))
+            threading.Thread(target=sig_ssh, name="t_ssh_to_%s" % dv['ip'], args=(dv['ip'], dv['user'], dv['password'], cmd.strip())))
 
     for thread in thread_list:
         thread.start()
