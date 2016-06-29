@@ -92,9 +92,8 @@ def cos_analyze(request):
 
 def run_cmd(request):
     cmd = request.POST['cmd']
-    total_ips=[]
-    tb_dict = {}
-    ip2name = {}
+    dv_ssh_info_list=[]
+
     device_info_list = []
     device_string_list = []
     #get selected devices
@@ -112,12 +111,12 @@ def run_cmd(request):
             pass
         else:
             dv_info.append(dv.ip)
-            total_ips.append(dv.ip)
+            dv_ssh_info_list.append({'ip':dv.ip,'user':dv.user,'password':dv.password})
             device_info_list.append(dv_info)
 
 
 
-    rst_dict = pssh_cmd(request, total_ips, cmd)
+    rst_dict = pssh_cmd(request, dv_ssh_info_list, cmd)
     # rst_dict={}
     return render(request, 'triWeb/run_cmd.html', {'device_info_list':device_info_list,
                                                    'cmd': cmd, 'rst_dict': rst_dict})
@@ -125,7 +124,7 @@ def run_cmd(request):
 
 
 
-def pssh_cmd(request, ips, cmd):
+def pssh_cmd(request, dv_info_list, cmd):
     thread_list = list()
     # q = queue.Queue()
     rst_dict = dict()
@@ -134,9 +133,9 @@ def pssh_cmd(request, ips, cmd):
         rtn = ssh2(ip, username, password, cmd)
         rst_dict[ip] = rtn
 
-    for ip in ips:
+    for dv in dv_info_list:
         thread_list.append(
-            threading.Thread(target=sig_ssh, name="t_ssh_to_%s" % ip, args=(ip, 'root', 'rootroot', cmd)))
+            threading.Thread(target=sig_ssh, name="t_ssh_to_%s" % dv['ip'], args=(dv['ip'], dv['user'], dv['password'], cmd)))
 
     for thread in thread_list:
         thread.start()
