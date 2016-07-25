@@ -8,6 +8,7 @@ urlpatterns = patterns('',
 
                        url(r'^admin/', include(admin.site.urls)),
                        # url(r'', include('blog.urls')),
+                       url(r'^webssh/', include('webssh.urls')),
                        url(r'', include('triWeb.urls'))
 
                        )

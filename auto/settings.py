@@ -39,7 +39,8 @@ INSTALLED_APPS = (
     'debugtools',
     'blog',
     'triWeb',
-    'triWeb.templatetags.myfilter'
+    'triWeb.templatetags.myfilter',
+    'webssh'
 )
 
 MIDDLEWARE_CLASSES = (
