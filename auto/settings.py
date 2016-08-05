@@ -10,6 +10,9 @@ https://docs.djangoproject.com/en/1.7/ref/settings/
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 import os
+import tornado.web
+import tornado_websockets
+
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 
 
@@ -40,7 +43,8 @@ INSTALLED_APPS = (
     'blog',
     'triWeb',
     'triWeb.templatetags.myfilter',
-    'webssh'
+    'webssh',
+    'tornado_websockets',
 )
 
 MIDDLEWARE_CLASSES = (
@@ -55,7 +59,7 @@ MIDDLEWARE_CLASSES = (
 
 ROOT_URLCONF = 'auto.urls'
 
-WSGI_APPLICATION = 'auto.wsgi.application'
+WSGI_APPLICATION = 'tornado_websockets.wsgi.application'
 
 
 # Database
@@ -93,3 +97,18 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+STATIC_WEBSSH = os.path.join(BASE_DIR,'webssh', 'static')
+
+# Tornado configuration
+
+TORNADO = {
+    # 'port': 8080,
+    'handlers': [
+        (r'%s(.*)' % STATIC_URL, tornado.web.StaticFileHandler, {'path': STATIC_WEBSSH}),
+        tornado_websockets.django_app
+    ],
+    'settings': {
+        'autoreload': True,
+        'debug': True
+    }
+}
