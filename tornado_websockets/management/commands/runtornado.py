@@ -9,10 +9,10 @@ import django.core.handlers.wsgi
 import tornado.ioloop
 import tornado.web
 import tornado.wsgi
+import tornado.options
 from django.apps import AppConfig
 from django.conf import settings
 from django.core.management import BaseCommand
-
 from tornado_websockets.tornadowrapper import TornadoWrapper
 
 if django.VERSION[1] > 5:
@@ -88,6 +88,7 @@ class Command(BaseCommand, AppConfig):
 
         # 6 - Run Tornado
         if not test_mode:
+            tornado.options.parse_config_file("/Users/chenxuan/Workspace/django/auto/tornado_websockets/webssh.conf")
             TornadoWrapper.start_app(tornado_handlers, tornado_settings)
             TornadoWrapper.listen(tornado_port)
             TornadoWrapper.loop()

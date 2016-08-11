@@ -9,6 +9,8 @@ import tornado.ioloop
 import tornado.web
 import tornado.websocket
 from six import integer_types
+from tornado_websockets.ioloop import IOLoop
+from tornado_websockets.websockethandler import WebSocketHandler
 
 pp = pprint.PrettyPrinter(indent=4)
 
@@ -26,7 +28,7 @@ class TornadoWrapper:
 
     # Default values for user configuration
     tornado_port = 0  # will never be 0
-    handlers = []
+    handlers = [(r"/ws", WebSocketHandler)]
 
     @classmethod
     def start_app(cls, tornado_handlers=None, tornado_settings=None):
@@ -92,7 +94,7 @@ class TornadoWrapper:
         # pp.pprint(cls.tornado_app.handlers)
         # print('== Using settings:')
         # pp.pprint(cls.tornado_app.settings)
-
+        IOLoop.instance().start()
         tornado.ioloop.IOLoop.instance().start()
 
     @classmethod

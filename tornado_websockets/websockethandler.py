@@ -1,126 +1,58 @@
 # coding: utf-8
 
-import inspect
-
-import tornado
-import tornado.escape
-import tornado.httpserver
-import tornado.ioloop
-import tornado.web
+import logging
 import tornado.websocket
 
-import tornado_websockets.websocket
-from tornado_websockets.exceptions import *
+from tornado_websockets.daemon import Bridge
+from tornado_websockets.data import ClientData
+from tornado_websockets.utils import check_ip,check_port
+
 
 
 class WebSocketHandler(tornado.websocket.WebSocketHandler):
-    """
-        Represents a WebSocket connection, wrapper of `tornado.websocket.WebSocketHandler <http://www.tornadoweb.org/en/stable/websocket.html#event-handlers>`_ class.
+    clients = dict()
 
-        This class should not be instantiated directly; use the :class:`~tornado_websockets.websocket.WebSocket` class
-        instead.
-    """
+    def get_client(self):
+        return self.clients.get(self._id(), None)
 
-    def initialize(self, websocket):
-        """
-            Called when class initialization, makes a link between a :class:`~tornado_websockets.websocket.WebSocket`
-            instance and this object.
+    def put_client(self):
+        bridge = Bridge(self)
+        self.clients[self._id()] = bridge
 
-            :param websocket: instance of WebSocket.
-            :type websocket: WebSocket
-        """
+    def remove_client(self):
+        bridge = self.get_client()
+        if bridge:
+            bridge.destroy()
+            del self.clients[self._id()]
 
-        if not isinstance(websocket, tornado_websockets.websocket.WebSocket):
-            raise InvalidInstanceError(websocket, 'tornado_websockets.websocket.WebSocket')
+    @staticmethod
+    def _check_init_param(data):
+        return check_ip(data["hostname"]) and check_port(data["port"])
 
-        # Make a link between a WebSocket instance and this object
-        self.websocket = websocket
-        websocket.handlers.append(self)
+    @staticmethod
+    def _is_init_data(data):
+        return data.get_type() == 'init'
 
-    def check_origin(self, origin):
-        return True
-
-    def on_message(self, message):
-        """
-            Handle incoming messages on the WebSocket.
-
-            :param message: JSON string
-            :type message: str
-        """
-
-        try:
-            message = tornado.escape.json_decode(message)
-            event = message.get('event')
-            data = message.get('data')
-        except ValueError:
-            self.emit_warning('Invalid JSON was sent.')
-            return
-
-        if not event:
-            self.emit_warning('There is no event in this JSON.')
-            return
-        elif self.websocket.events.get(event) is None:
-            self.emit_warning('Event is not binded.')
-            return
-
-        if not data:
-            data = {}
-        elif not isinstance(data, dict):
-            self.emit_warning('The data should be a dictionary.')
-            return
-
-        callback = self.websocket.events.get(event)
-        spec = inspect.getargspec(callback)
-        kwargs = {}
-
-        if 'self' in spec.args:
-            kwargs['self'] = self.websocket.context
-        if 'socket' in spec.args:
-            kwargs['socket'] = self
-        if 'data' in spec.args:
-            kwargs['data'] = data
-
-        return callback(**kwargs)
+    def _id(self):
+        return id(self)
 
     def open(self):
-        """
-            Called when the WebSocket is opened
-        """
+        self.put_client()
 
-        if self.websocket.events.get('open'):
-            self.on_message('{"event": "open"}')
+    def on_message(self, message):
+        bridge = self.get_client()
+        client_data = ClientData(message)
+        if self._is_init_data(client_data):
+            if self._check_init_param(client_data.data):
+                bridge.open(client_data.data)
+                logging.info('connection established from: %s' % self._id())
+            else:
+                self.remove_client()
+                logging.warning('init param invalid: %s' % client_data.data)
+        else:
+            if bridge:
+                bridge.trans_forward(client_data.data)
 
     def on_close(self):
-        """
-            Called when the WebSocket is closed, delete the link between this object and its WebSocket.
-        """
-
-        self.websocket.handlers.remove(self)
-
-    def emit(self, event, data):
-        """
-            Sends a given event/data combinaison to the client of this WebSocket.
-
-            Wrapper for `tornado.websocket.WebSocketHandler.write_message <http://www.tornadoweb.org/en/stable/
-            websocket.html#tornado.websocket.WebSocketHandler.write_message>`_ method.
-
-            :param event: event name to emit
-            :param data: associated data
-            :type event: str
-            :type data: dict
-        """
-
-        self.write_message({
-            'event': event,
-            'data': data
-        })
-
-    def emit_warning(self, message):
-        """
-            Shortuct to emit a warning.
-
-            :param message: error message
-            :type message: str
-        """
-
-        return self.emit('warning', {'message': message})
+        self.remove_client()
+        logging.info('client close the connection: %s' % self._id())
